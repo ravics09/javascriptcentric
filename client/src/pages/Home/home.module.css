@@ -1,0 +1,61 @@
+.container {
+  margin-top: 20px;
+}
+.firstColumnFirstRow {
+  background-color: #abcff7;
+  margin-right: 1px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  border-width: 1px;
+}
+.firstColumnSecondRow {
+  background-color: #f7dc6f;
+  margin-bottom: 10px;
+  margin-right: 1px;
+  border-radius: 5px;
+  border-width: 10px;
+}
+.secondColumn {
+  background-color: white;
+  margin-bottom: 10px;
+  padding-top: 10px;
+  box-shadow: 2px 1px 2px black !important;
+}
+.cardHeader {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.cardTitle {
+  padding-top: 10px;
+}
+.cardName {
+  padding-left: 10px;
+}
+.cardSubtitle {
+  padding-top: 10px;
+}
+.cardBody {
+  /* padding-left: 70px; */
+}
+.cardFooter {
+  padding-top: 10px;
+  padding-bottom: 10px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.thirdColumn {
+  margin-bottom: 10px;
+}
+.rightCardSection {
+  display: flex;
+  margin-bottom: 10px;
+  transition: transform 0.2s;
+}
+.rightCardSection:hover {
+  margin-bottom: 10px;
+  transform: scale(1.5);
+  border-radius: 50px;
+}
+

@@ -1,0 +1,111 @@
+.container {
+  background-color: #181a1f !important;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+.firstColumn {
+  background-color: #181a1f !important;
+  color: #fff !important;
+}
+.secondColumn {
+  background-color: #242424 !important;
+  padding-bottom: 10px;
+}
+.thirdColumn {
+  background-color: #181a1f !important;
+}
+.firstColumnItem {
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+.coverImage {
+  /* background-color: #181a1f !important; */
+  padding-top: 10px;
+  /* padding-bottom: 10px; */
+}
+.postDetails {
+  background-color: #242424 !important;
+  color: #fff !important;
+  padding-top: 10px;
+}
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+}
+.cardUserDetail{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.cardTitle {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+.cardSubtitle {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+.cardBody{
+  font-family:'Vazir', sans-serif;
+  font-size:20px;
+}
+.cardName {
+  padding-left: 10px;
+}
+.discussion {
+  background-color: 242424 !important;
+  padding-top: 10px;
+}
+.discussionItem {
+  background-color: 242424 !important;
+  color: white !important;
+  display: flex;
+  justify-content: space-between;
+}
+.commentForm {
+  background-color: 242424 !important;
+  color: black !important;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+.postComment {
+  background-color: #3D3D3D !important;
+  color: white;
+  height: 100px;
+  font-size: 20px;
+  border-width: 0;
+}
+.postComment:focus {
+  background-color: #3D3D3D !important;
+  color: white;
+  border-width: 0;
+  border-color:  #181a1f !important;
+}
+.customBtn {
+  border-radius: 10px !important;
+  width: 100px;
+}
+.editLikeSaveBtn{
+  border-radius: 10px !important;
+  width: 100px;
+}
+.showComments{
+  background-color: #3D3D3D !important;
+  color: white;
+  font-size: 16px;
+  border-radius: 5px;
+  border-width: 1px;
+}
+.commentDetails{
+  background-color: #242424 !important;
+  color: #fff !important;
+  padding-top: 10px;
+  margin-top: 20px;
+  margin-left: 1px;
+  margin-right: 1px;
+}

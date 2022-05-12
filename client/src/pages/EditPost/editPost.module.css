@@ -1,0 +1,45 @@
+.container {
+    background-color: #181a1f !important;
+    color: #fff !important;
+  }
+  .postForm {
+    background-color: #242424 !important;
+    color: #fff;
+    width: auto;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border-radius: 10px;
+  }
+  .postTitle {
+    background-color: #242424 !important;
+    color: white;
+    height: 100px;
+    font-size: 40px;
+    border-width: 0;
+    border-color: lightgray !important;
+  }
+  .postTitle:focus {
+    background-color: #242424 !important;
+    color: white;
+    border-width: 0;
+    border-color:  #181a1f !important;
+  }
+  .postContent {
+    background-color: #242424 !important;
+    color: white;
+    height: 300px;
+    font-size: 20px;
+    border-width: 0;
+  }
+  .postContent:focus {
+    background-color: #242424 !important;
+    color: white;
+    border-width: 0;
+    border-color:  #181a1f !important;
+  }
+  .customBtn {
+    border-radius: 10px !important;
+    width: 150px;
+    margin-left: 10px;
+  }
+  

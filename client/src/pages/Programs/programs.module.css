@@ -1,0 +1,86 @@
+.container {
+  background-color: white;
+  padding-top: 10px;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+.firstColumnHeader {
+  background-color: #f1948a;
+  margin-right: 2px;
+  margin-left: 2px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  border-width: 1px;
+  box-shadow: 2px 1px 5px 2px gray !important;
+}
+.firstColumnRows {
+  background-color: white;
+  margin-right: 2px;
+  margin-left: 2px;
+  margin-bottom: 10px;
+}
+.interviewSection {
+  background-color: #abcff7;
+  margin-bottom: 10px;
+  margin-right: 2px;
+  margin-left: 2px;
+  border-radius: 5px;
+  border-width: 1px;
+}
+.interviewSection:hover {
+  background-color: #abcff7;
+  margin-bottom: 10px;
+  margin-right: 2px;
+  margin-left: 2px;
+  border-radius: 5px;
+  border-width: 1px;
+  box-shadow: 2px 1px 5px 2px gray !important;
+}
+.codingSection {
+  background-color: #f9e79f;
+  margin-bottom: 10px;
+  margin-right: 2px;
+  margin-left: 2px;
+  border-radius: 5px;
+  border-width: 1px;
+}
+.codingSection:hover {
+  background-color: #f9e79f;
+  margin-bottom: 10px;
+  margin-right: 2px;
+  margin-left: 2px;
+  border-radius: 5px;
+  border-width: 1px;
+  box-shadow: 2px 1px 5px 2px gray !important;
+}
+.programSection {
+  background-color: #f1948a;
+  margin-bottom: 10px;
+  margin-right: 2px;
+  margin-left: 2px;
+  border-radius: 5px;
+  border-width: 1px;
+  box-shadow: 2px 1px 5px 2px gray !important;
+}
+.dataStructureSection {
+  background-color: #f7dc6f;
+  margin-bottom: 10px;
+  margin-right: 2px;
+  margin-left: 2px;
+  border-radius: 5px;
+  border-width: 1px;
+}
+.dataStructureSection:hover {
+  background-color: #f7dc6f;
+  margin-bottom: 10px;
+  margin-right: 2px;
+  margin-left: 2px;
+  border-radius: 5px;
+  border-width: 1px;
+  box-shadow: 2px 1px 5px 2px gray !important;
+}
+.header {
+  background-color: #f1948a;
+  margin-right: 2px;
+  margin-bottom: 10px;
+}

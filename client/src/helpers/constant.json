@@ -1,0 +1,52 @@
+[
+    {
+        "index":1,
+        "title":"What are the possible ways to create objects in JavaScript",
+        "description":"There are many ways to create objects in javascript as below",
+        "points": [
+            {
+                "pointIndex":1,
+                "subTitle":"Object constructor",
+                "description": "",
+                "code": "var object = new Object();"
+            },
+            {
+                "pointIndex":1,
+                "subTitle":"Object's create method",
+                "description": "",
+                "code": "var object = Object.create(null);"
+            },
+            {
+                "pointIndex":1,
+                "subTitle":"Object literal syntax",
+                "description": "",
+                "code": " var object = {};"
+            },
+            {
+                "pointIndex":1,
+                "subTitle":"Function constructor",
+                "description": "",
+                "code": ""
+            },
+            {
+                "pointIndex":1,
+                "subTitle":"Function constructor with prototype",
+                "description": "",
+                "code": ""
+            },
+            {
+                "pointIndex":1,
+                "subTitle":"ES6 Class syntax",
+                "description": "",
+                "code": ""
+            },
+            {
+                "pointIndex":1,
+                "subTitle":"Singleton pattern",
+                "description": "A Singleton is an object which can only be instantiated one time. Repeated calls to its constructor return the same instance and this way one can ensure that they don't accidentally create multiple instances.",
+                "code": ""
+            }
+        ],
+        "code":""
+    }
+]

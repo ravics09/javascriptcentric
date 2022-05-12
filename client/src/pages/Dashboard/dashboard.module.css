@@ -1,0 +1,68 @@
+.container {
+  background-color: #181a1f !important;
+  color: white !important;
+  margin-top: 20px;
+  border-radius: 15px;
+}
+.headerCard {
+  height: 100px;
+  align-items: center;
+  text-align: center;
+  background-color: #161616 !important;
+  color: white !important;
+  border-radius: 10px;
+  border: 1px solid gray !important;
+  padding-top: 20px;
+}
+.topRow {
+  padding-top: 10px;
+}
+.cardRow {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+.postsSection{
+  /* background-color:gray !important; */
+}
+.otherInfoSection{
+  padding-top: 10px;
+}
+.postRow {
+  padding-top: 30px;
+}
+.mainPostHeader {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row;
+  padding-bottom: 10px;
+  padding-top: 10px;
+}
+.mainPostRow {
+  background-color:#242424 !important;
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+.renderPost:hover {
+  background-color: #161616 !important;
+  border-radius: 10px;
+}
+.renderPost {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row;
+  color: white !important;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  /* margin-top: 10px; */
+}
+.titleSection{
+  color: gray !important;
+  width: 500px;
+}
+.postInfo{
+  color: gray !important;
+}
+.customBtn{
+  width: 60px;
+  text-align: center;
+}

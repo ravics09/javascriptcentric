@@ -1,0 +1,39 @@
+.container {
+    background-color: #181A1F !important;
+    color: white !important;
+    padding-top: 10px ;
+    box-shadow: 5px 5px 20px 2px gray !important;  
+  }
+  .contactUsForm{
+    background-color:#181A1F;
+    color: white !important;
+    height: 600px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    border-width: 10px;
+  }
+  .contactInfo{
+    background-color:#181A1F;
+    color: white !important;  
+    height: 600px;
+    padding-top: 50px;
+    border-radius: 10px;
+    border-width: 10px;
+  }
+  .contactForm {
+    color: #fff;
+    width: 300px;
+  }
+  .formControl {
+    color: black;
+  }
+  .customBtn {
+    background-color: blueviolet !important;
+    border: #fff !important;
+    border-radius: 10px !important;
+    border-width: 10px !important;
+    margin-top: 15px;
+  }
+  
