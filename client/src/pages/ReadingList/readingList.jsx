@@ -1,12 +1,6 @@
 import React, { useState, useEffect, Fragment } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  Container,
-  Row,
-  Col,
-  Button,
-  Image,
-} from "react-bootstrap";
+import { Container, Row, Col, Button, Image } from "react-bootstrap";
 import moment from "moment";
 import swal from "sweetalert";
 import { useSelector } from "react-redux";
@@ -80,7 +74,6 @@ const ReadingList = () => {
 
   const RenderAllPost = ({ item, index }) => {
     const formateDate = moment(item.createdAt).format("MMM Do");
-
     if (item.postedBy.profilePhoto) {
       var imgstr = item.postedBy.profilePhoto;
       imgstr = imgstr.replace("public", "");
@@ -88,7 +81,6 @@ const ReadingList = () => {
     } else {
       profilePic = PLACEHOLDER_IMG;
     }
-
     return (
       <div className={readingListStyle.renderPost} key={index}>
         <div className={readingListStyle.postByData}>
@@ -112,7 +104,8 @@ const ReadingList = () => {
         </div>
         <div className={readingListStyle.postInfo}>
           <FaHeart color="red" /> &nbsp; &nbsp;
-          <FaRegComment color="#0C6EFD" /> {item.comments.length}
+          <FaRegComment color="#0C6EFD" />{" "}
+          {item.comments ? item.comments.length : 0}
         </div>
         <div>
           <Button
@@ -130,7 +123,10 @@ const ReadingList = () => {
   return (
     <Fragment>
       <Navbar />
-      <Container className={readingListStyle.container} style={{minHeight:dimensions.height}}>
+      <Container
+        className={readingListStyle.container}
+        style={{ minHeight: dimensions.height }}
+      >
         <Row className={readingListStyle.topRow}>
           <div className={readingListStyle.topRowItems}>
             <h2>Reading list ({readingList ? readingList.length : 0})</h2>

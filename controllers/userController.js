@@ -41,8 +41,8 @@ async function getProfile(request, response) {
     const user = await User.findById(id);
     if (user) {
       let profilePic = user.profilePhoto
-      ? "http://localhost:9090" + user.profilePhoto.replace("public", "")
-      : null;
+        ? "http://localhost:9090" + user.profilePhoto.replace("public", "")
+        : null;
 
       const customResponse = {
         _id: user._id,
@@ -88,15 +88,15 @@ async function editProfile(request, response) {
 
     User.findByIdAndUpdate(request.params.id, updatedInfo).then((dbUser) => {
       let profilePic = dbUser.profilePhoto
-      ? "http://localhost:9090" + dbUser.profilePhoto.replace("public", "")
-      : null;
+        ? "http://localhost:9090" + dbUser.profilePhoto.replace("public", "")
+        : null;
 
-    const customResponse = {
-      _id: dbUser._id,
-      fullName: dbUser.fullName,
-      email: dbUser.email,
-      profilePhoto: profilePic,
-    };
+      const customResponse = {
+        _id: dbUser._id,
+        fullName: dbUser.fullName,
+        email: dbUser.email,
+        profilePhoto: profilePic,
+      };
       response.status(200).json({
         message: "Profile updated successfully!",
         user: customResponse,
@@ -114,15 +114,15 @@ async function UploadProfileImage(request, response) {
       .save()
       .then((dbUser) => {
         let profilePic = dbUser.profilePhoto
-        ? "http://localhost:9090" + dbUser.profilePhoto.replace("public", "")
-        : null;
-  
-      const customResponse = {
-        _id: dbUser._id,
-        fullName: dbUser.fullName,
-        email: dbUser.email,
-        profilePhoto: profilePic,
-      };
+          ? "http://localhost:9090" + dbUser.profilePhoto.replace("public", "")
+          : null;
+
+        const customResponse = {
+          _id: dbUser._id,
+          fullName: dbUser.fullName,
+          email: dbUser.email,
+          profilePhoto: profilePic,
+        };
 
         response.status(200).json({
           user: customResponse,
@@ -133,22 +133,6 @@ async function UploadProfileImage(request, response) {
         response.json(err);
       });
   });
-  // const user = User.findById(id);
-  // if (user) {
-  //   const updatedInfo = new User({
-  //     _id: id,
-  //     profilePhoto: request.file.filename,
-  //     profilePhotoPath: request.file.path,
-  //   });
-
-  //   User.findByIdAndUpdate(id, updatedInfo).then((dbUser) => {
-  //     var filePath = dbUser.profilePhotoPath;
-  //     var resolvedPath = path.resolve(filePath);
-  //     console.log("resolvedPath", resolvedPath);
-
-  //     response.status(200).sendFile(resolvedPath);
-  //   });
-  // } else response.status(404).send("User Information Not Found.");
 }
 
 async function addToReadingList(request, response) {
@@ -177,24 +161,21 @@ async function addToReadingList(request, response) {
 async function removeFromReadingList(request, response) {
   const { id } = request.params;
   const { postId } = request.body;
-
-  const user = await User.findById(id);
-  if (user) {
-    const newItem = {
-      postId: postId,
-    };
-
-    const updateReadingList = {
-      $push: { readingList: newItem },
-    };
-
-    User.findByIdAndUpdate(id, updateReadingList).then((res) => {
-      response.status(200).json({
-        message: "New Article Added To Reading List!",
-        readingList: res.readingList,
-      });
+  User.findOneAndUpdate(
+    { _id: id },
+    {
+      $pull: {
+        readingList: { postId: postId },
+      },
+    },
+    {new: true},
+  ).then((result) => {
+    console.log("result", result);
+    response.status(200).json({
+      message: "Selected Article Removed From Reading List!",
+      readingList: result.readingList,
     });
-  }
+  });
 }
 
 async function fetchReadingList(request, response) {

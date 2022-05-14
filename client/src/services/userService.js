@@ -113,40 +113,40 @@ const uploadProfilePhoto = async (id, formData, options) => {
     });
 };
 
-const addToReadingList = (id, postId) => {
-  const url = `http://localhost:9090/other/addtoreadinglist/${id}`;
+const addToReadingList = async (id, postId) => {
+  const url = `http://localhost:9090/user/addtoreadinglist/${id}`;
   const payload = {
     postId,
   };
 
-  return axios.put(url, payload, { headers: AuthHeader() }).then(
-    (response) => {
+  return axios
+    .put(url, payload)
+    .then((response) => {
       if (response.status === 200) {
+        console.log("readinglist", response.readingList);
         return {
           status: "success",
-          message: "New Article Added To Reading List!",
+          message: response.data.message, // "New Article Added To Reading List!",
         };
       }
-    },
-    (error) => {
-      if (error.response) {
-        return { status: "failed", message: error.response.data };
-      } else {
-        return { status: "failed", message: "Server Not Responding" };
-      }
-    }
-  );
+    })
+    .catch((error) => {
+      return {
+        status: "failed",
+        message: error.response.data.message,
+      };
+    });
 };
 
 const fetchReadingList = async (id) => {
-  const url = `http://localhost:9090/other/fetchReadingList/${id}`;
+  const url = `http://localhost:9090/user/fetchReadingList/${id}`;
   const readingListId = await axios.get(url, { headers: AuthHeader() });
   const idList = readingListId.data.readingList;
 
   let readingList = [];
   if (idList.length > 0) {
     for (let i = 0; i < idList.length; i++) {
-      let result = await FeedService.getPost(idList[i].postId);
+      let result = await FeedService.getReadingPost(idList[i].postId);
       if (result.post !== null) readingList.push(result.post);
     }
     return {
@@ -162,28 +162,27 @@ const fetchReadingList = async (id) => {
 };
 
 const removeFromReadingList = async (id, postId) => {
-  const url = `http://localhost:9090/other/removefromreadinglist/${id}`;
+  const url = `http://localhost:9090/user/removefromreadinglist/${id}`;
   const payload = {
     postId,
   };
 
-  return axios.put(url, payload, { headers: AuthHeader() }).then(
-    (response) => {
+  return axios
+    .put(url, payload)
+    .then((response) => {
       if (response.status === 200) {
         return {
           status: "success",
           message: "Selected Article Removed From Reading List!",
         };
       }
-    },
-    (error) => {
-      if (error.response) {
-        return { status: "failed", message: error.response.data };
-      } else {
-        return { status: "failed", message: "Server Not Responding" };
-      }
-    }
-  );
+    })
+    .catch((error) => {
+      return {
+        status: "failed",
+        message: error.response.data.message,
+      };
+    });
 };
 
 const userService = {

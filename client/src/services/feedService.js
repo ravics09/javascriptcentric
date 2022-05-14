@@ -63,6 +63,28 @@ const getPost = async (id) => {
     });
 };
 
+const getReadingPost = async (id) => {
+  const url = `http://localhost:9090/feed/getreadingpost/${id}`;
+  const payload = {
+    id,
+  };
+  return axios
+    .get(url, payload)
+    .then((response) => {
+      if (response.status === 200) {
+        return {
+          post: response.data.posts,
+        };
+      }
+    })
+    .catch((error) => {
+      return {
+        status: "failed",
+        message: error.response.data.message,
+      };
+    });
+};
+
 const addComment = (postId, userId, comment) => {
   const url = `http://localhost:9090/feed/createnewcomment/${postId}`;
   const payload = {
@@ -155,6 +177,7 @@ const feedService = {
   getUserPosts,
   editPost,
   deletePost,
+  getReadingPost,
 };
 
 export default feedService;

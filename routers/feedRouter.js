@@ -9,6 +9,7 @@ mainRoutes.put('/editpost/:id', editPost);
 mainRoutes.put('/createnewcomment/:id',createPostComment);
 mainRoutes.get('/getuserposts/:id', getUserPosts);
 mainRoutes.delete('/deletepost/:id', deletePost);
+mainRoutes.get('/getreadingpost/:id', getReadingPost)
 
 
 function createPost(request, response, next) {
@@ -17,6 +18,10 @@ function createPost(request, response, next) {
 
 function getPost(request, response, next) {
     feedController.getPost(request, response, next);
+};
+
+function getReadingPost(request, response, next) {
+    feedController.getReadingPost(request, response, next);
 };
 
 function getPosts(request, response, next) {

@@ -2,12 +2,11 @@ const User = require("./../models/userModel");
 const Feed = require("./../models/feedModel");
 
 async function createPost(request, response) {
-  const { userId, postTitle, postContent, tags } = request.body;
+  const { userId, postTitle, postContent} = request.body;
   const feed = new Feed({
     postedBy: userId,
     postTitle: postTitle,
-    postContent: postContent,
-    tags: tags
+    postContent: postContent
   });
 
   feed.save().then(() => {
@@ -34,9 +33,28 @@ async function getPost(request, response) {
     });
 }
 
+async function getReadingPost(request, response) {
+  const { id } = request.params;
+  Feed.findById({ _id: id })
+    .select(["postedBy", "postTitle", "likeCount", "commentCount", "createdAt", "profilePhoto"])
+    .populate("postedBy", ["fullName", "email", "profilePhoto"])
+    .exec((error, posts) => {
+      if (error) {
+        response.status(401).json({
+          error: error,
+        });
+      } else {
+        response.status(200).json({
+          posts: posts,
+        });
+      }
+    });
+}
+
 async function getPosts(request, response) {
-  Feed.find({}).select(["postedBy", "postTitle", "likeCount", "commentCount","createdAt"])
-    .populate("postedBy", ["fullName","email" ,"profilePhoto"])
+  Feed.find({})
+    .select(["postedBy", "postTitle", "likeCount", "commentCount", "createdAt"])
+    .populate("postedBy", ["fullName", "email", "profilePhoto"])
     .exec((error, posts) => {
       if (error) {
         response.status(401).send(error);
@@ -134,4 +152,5 @@ module.exports = {
   createPostComment,
   getUserPosts,
   deletePost,
+  getReadingPost,
 };
