@@ -4,7 +4,7 @@ import AuthHeader from "./authHeader";
 // const API_URL = "http://localhost:9090/feed";
 
 const createPost = async (payload) => {
-  const url = "http://localhost:9090/feed/createpost";
+  const url = "/feed/createpost";
   return axios
     .post(url, payload)
     .then((response) => {
@@ -24,14 +24,16 @@ const createPost = async (payload) => {
 };
 
 const getAllPosts = async () => {
-  const url = "http://localhost:9090/feed/getPosts";
+  const url = "/feed/getPosts";
   return axios
     .get(url)
     .then((response) => {
-      return {
-        status: "success",
-        posts: response.data.posts,
-      };
+      if (response.status === 200) {
+        return {
+          status: "success",
+          posts: response.data.posts,
+        };
+      }
     })
     .catch((error) => {
       return {
@@ -42,7 +44,7 @@ const getAllPosts = async () => {
 };
 
 const getPost = async (id) => {
-  const url = `http://localhost:9090/feed/getpost/${id}`;
+  const url = `/feed/getpost/${id}`;
   const payload = {
     id,
   };
@@ -62,7 +64,7 @@ const getPost = async (id) => {
 };
 
 const addComment = (postId, userId, comment) => {
-  const url = `http://localhost:9090/feed/createnewcomment/${postId}`;
+  const url = `/feed/createnewcomment/${postId}`;
   const payload = {
     comment,
     userId,
@@ -88,7 +90,7 @@ const addComment = (postId, userId, comment) => {
 };
 
 const getUserPosts = (userId) => {
-  const url = `http://localhost:9090/feed/getuserposts/${userId}`;
+  const url = `/feed/getuserposts/${userId}`;
   return axios.get(url).then(
     (response) => {
       if (response.status === 200) {
@@ -106,7 +108,7 @@ const getUserPosts = (userId) => {
 };
 
 const editPost = async (id, payload) => {
-  const url = `http://localhost:9090/feed/editpost/${id}`;
+  const url = `/feed/editpost/${id}`;
   return axios
     .put(url, payload)
     .then((response) => {
@@ -126,7 +128,7 @@ const editPost = async (id, payload) => {
 };
 
 const deletePost = async (id) => {
-  const url = `http://localhost:9090/feed/deletepost/${id}`;
+  const url = `/feed/deletepost/${id}`;
   return axios
     .delete(url, { headers: AuthHeader() })
     .then((response) => {

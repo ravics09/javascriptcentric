@@ -66,7 +66,7 @@ const NavBar = () => {
   // }
 
   return (
-    <Navbar expand="md" bg="dark">
+    <Navbar expand="md" bg="dark" fixed="top" className={NavBarStyle.container}>
       <Container>
         <Navbar.Brand className={NavBarStyle.navBrandLink}>
           <span style={{ color: "rgb(247, 220, 70)" }}>JavaScript </span>Centric

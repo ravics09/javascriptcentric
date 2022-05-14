@@ -143,7 +143,7 @@ const UserAccount = () => {
     const result = await UserService.uploadProfilePhoto(
       userId,
       formData,
-      options
+      options,
     );
     if (result.status === "success") {
       setProfilePhoto(result.image);

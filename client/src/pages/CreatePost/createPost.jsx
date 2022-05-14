@@ -21,16 +21,16 @@ const validationSchema = yup.object().shape({
     .string()
     .max(5000, "*Content must be less than 5000 characters")
     .required("Post Content is mendatory"),
-  tags: yup
-    .array()
-    .length(3, "Max 3 tags are allowed")
-    .required("tags is mendatory"),
+  // tags: yup
+  //   .array()
+  //   .length(3, "Max 3 tags are allowed")
+  //   .required("tags is mendatory"),
 });
 
 const initialValues = {
   title: "",
-  content: "",
-  tags: [],
+  content: ""
+  // tags: [],
 };
 
 const CreatePost = () => {
@@ -151,7 +151,7 @@ const CreatePost = () => {
                       </InputGroup>
                     </Form.Group>
                   </Row>
-                  <Row className="mb-3">
+                  {/* <Row className="mb-3">
                     <Form.Group
                       as={Col}
                       md="12"
@@ -169,7 +169,7 @@ const CreatePost = () => {
                         />
                       </InputGroup>
                     </Form.Group>
-                  </Row>
+                  </Row> */}
                   <Row className="mb-3">
                     <Form.Group
                       as={Col}
