@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Fragment } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import * as yup from "yup";
 import swal from "sweetalert";
@@ -49,7 +49,10 @@ const SignIn = () => {
   const [showPass, setShowPass] = useState(false);
   const [checkboxChecked, setCheckboxChecked] = useState(false);
   const { isLoggedIn } = useSelector((state) => state.AuthReducer);
-
+  const [dimensions, setDimensions] = useState({
+    height: window.innerHeight,
+    width: window.innerWidth,
+  });
   useEffect(() => {
     if (isLoggedIn === true) {
       navigate("/home");
@@ -111,198 +114,205 @@ const SignIn = () => {
   // };
 
   return (
-    <Container className={signInStyle.container}>
-      <Row className={signInStyle.formContainer}>
-        <Row style={{ textAlign: "center", paddingBottom: 50 }}>
-          <Col>
-            <h3 className={signInStyle.headerTitle}>Welcome Back</h3>
-          </Col>
-        </Row>
-        <Row>
-          <Col>
-            <Row className="mb-3">
-              <Image
-                src={Login_IMG}
-                style={{
-                  borderRadius: "30px",
-                  width: "100%",
-                  height: "100%",
+    <Fragment>
+      <Container
+        className={signInStyle.container}
+        style={{ minHeight: dimensions.height }}
+      >
+        <Row className={signInStyle.formContainer}>
+          <Row style={{ textAlign: "center" }}>
+            <Col>
+              <h3 className={signInStyle.headerTitle}>Welcome Back</h3>
+            </Col>
+          </Row>
+          <Row>
+            <Col>
+              <Row className="mb-3">
+                <Image
+                  src={Login_IMG}
+                  style={{
+                    borderRadius: "30px",
+                    width: "100%",
+                    height: "100%",
+                  }}
+                />
+              </Row>
+            </Col>
+            <Col>
+              <Formik
+                validationSchema={validationSchema}
+                initialValues={initialValues}
+                onSubmit={(values, { setSubmitting, resetForm }) => {
+                  setSubmitting(true);
+                  handleSignIn(values);
+                  setTimeout(() => {
+                    resetForm();
+                    setSubmitting(false);
+                  }, 1000);
                 }}
-              />
-            </Row>
-          </Col>
-          <Col>
-            <Formik
-              validationSchema={validationSchema}
-              initialValues={initialValues}
-              onSubmit={(values, { setSubmitting, resetForm }) => {
-                setSubmitting(true);
-                handleSignIn(values);
-                setTimeout(() => {
-                  resetForm();
-                  setSubmitting(false);
-                }, 1000);
-              }}
-            >
-              {({
-                handleSubmit,
-                handleChange,
-                handleBlur,
-                isSubmitting,
-                values,
-                touched,
-                errors,
-              }) => (
-                <Form
-                  onSubmit={handleSubmit}
-                  className={signInStyle.signInForm}
-                >
-                  <Row className="mb-3">
-                    <Form.Group controlId="validationFormEmail">
-                      <Form.Label>Email</Form.Label>
-                      <InputGroup>
-                        <InputGroup.Text style={{ backgroundColor: "white" }}>
-                          <AiOutlineMail />
-                        </InputGroup.Text>
-                        <Form.Control
-                          type="email"
-                          placeholder="Email"
-                          name="email"
-                          className={signInStyle.formControl}
-                          value={values.email}
-                          onBlur={handleBlur}
-                          onChange={handleChange}
-                          isInvalid={!!errors.email}
-                        />
-                        {touched.email && errors.email ? (
-                          <Form.Control.Feedback type="invalid">
-                            {errors.email}
-                          </Form.Control.Feedback>
-                        ) : null}
-                      </InputGroup>
-                    </Form.Group>
-                  </Row>
-                  <Row className="mb-3">
-                    <Form.Group
-                      as={Col}
-                      md="12"
-                      controlId="validationFormPassword"
-                    >
-                      <Form.Label>Password</Form.Label>
-                      <InputGroup>
-                        <InputGroup.Text style={{ backgroundColor: "white" }}>
-                          <BsLock />
-                        </InputGroup.Text>
-                        <Form.Control
-                          type={showPass ? "text" : "password"}
-                          placeholder="Password"
-                          name="password"
-                          className={signInStyle.formControl}
-                          value={values.password}
-                          onBlur={handleBlur}
-                          onChange={handleChange}
-                          isInvalid={!!errors.password}
-                        />
-                        <InputGroup.Text onClick={() => setShowPass(!showPass)}>
-                          {showPass ? (
-                            <BsFillEyeSlashFill />
-                          ) : (
-                            <BsFillEyeFill />
-                          )}
-                        </InputGroup.Text>
-                        {touched.password && errors.password ? (
-                          <Form.Control.Feedback type="invalid">
-                            {errors.password}
-                          </Form.Control.Feedback>
-                        ) : null}
-                      </InputGroup>
-                    </Form.Group>
-                  </Row>
-                  <Row className="mb-3">
-                    <Form.Group
-                      as={Col}
-                      md="12"
-                      controlId="validationFormCheckbox"
-                    >
-                      <Form.Check
-                        type="checkbox"
-                        label="Remember for 30 days"
-                        style={{ color: "black" }}
-                        onChange={(e) => setCheckboxChecked(!checkboxChecked)}
-                      />
-                    </Form.Group>
-                  </Row>
-                  <Row className="mb-3">
-                    <Link
-                      to="/forgetpassword"
-                      style={{ color: "black" }}
-                      as={Col}
-                      md="12"
-                    >
-                      Forget Password ?
-                    </Link>
-                  </Row>
-                  <Row className="mb-2" style={{ padding: 10 }}>
-                    <Button
-                      block
-                      className={signInStyle.customBtn}
-                      type="submit"
-                      disabled={isSubmitting}
-                    >
-                      Sign In
-                    </Button>
-                  </Row>
-
-                  <Row
-                    className="mb-2"
-                    style={{ paddingLeft: 10, paddingRight: 10 }}
+              >
+                {({
+                  handleSubmit,
+                  handleChange,
+                  handleBlur,
+                  isSubmitting,
+                  values,
+                  touched,
+                  errors,
+                }) => (
+                  <Form
+                    onSubmit={handleSubmit}
+                    className={signInStyle.signInForm}
                   >
-                    <GoogleLogin
-                      clientId="53790554286-8kljikjli2t9hdesgsss5a82u739djf7.apps.googleusercontent.com"
-                      render={(renderProps) => (
-                        <Button
-                          block
-                          className={signInStyle.googleSignBtn}
-                          onClick={renderProps.onClick}
-                        >
-                          Sign In With {"  "}
-                          <InputGroup.Text
-                            style={{
-                              backgroundColor: "#ffff",
-                              border: "white",
-                            }}
-                          >
-                            <FcGoogle />
+                    <Row className="mb-3">
+                      <Form.Group controlId="validationFormEmail">
+                        <Form.Label>Email</Form.Label>
+                        <InputGroup>
+                          <InputGroup.Text style={{ backgroundColor: "white" }}>
+                            <AiOutlineMail />
                           </InputGroup.Text>
-                        </Button>
-                      )}
-                      onSuccess={responseGoogleSuccess}
-                      // onFailure={responseGoogleError}
-                      cookiePolicy={"single_host_origin"}
-                    />
-                  </Row>
-
-                  <Row className="mb-2">
-                    <p
-                      style={{
-                        color: "black",
-                        paddingTop: 10,
-                        textAlign: "center",
-                      }}
-                    >
-                      Don't have an account ? {""}
-                      <Link to="/signup" style={{ color: "black" }}>
-                        Sign Up
+                          <Form.Control
+                            type="email"
+                            placeholder="Email"
+                            name="email"
+                            className={signInStyle.formControl}
+                            value={values.email}
+                            onBlur={handleBlur}
+                            onChange={handleChange}
+                            isInvalid={!!errors.email}
+                          />
+                          {touched.email && errors.email ? (
+                            <Form.Control.Feedback type="invalid">
+                              {errors.email}
+                            </Form.Control.Feedback>
+                          ) : null}
+                        </InputGroup>
+                      </Form.Group>
+                    </Row>
+                    <Row className="mb-3">
+                      <Form.Group
+                        as={Col}
+                        md="12"
+                        controlId="validationFormPassword"
+                      >
+                        <Form.Label>Password</Form.Label>
+                        <InputGroup>
+                          <InputGroup.Text style={{ backgroundColor: "white" }}>
+                            <BsLock />
+                          </InputGroup.Text>
+                          <Form.Control
+                            type={showPass ? "text" : "password"}
+                            placeholder="Password"
+                            name="password"
+                            className={signInStyle.formControl}
+                            value={values.password}
+                            onBlur={handleBlur}
+                            onChange={handleChange}
+                            isInvalid={!!errors.password}
+                          />
+                          <InputGroup.Text
+                            onClick={() => setShowPass(!showPass)}
+                          >
+                            {showPass ? (
+                              <BsFillEyeSlashFill />
+                            ) : (
+                              <BsFillEyeFill />
+                            )}
+                          </InputGroup.Text>
+                          {touched.password && errors.password ? (
+                            <Form.Control.Feedback type="invalid">
+                              {errors.password}
+                            </Form.Control.Feedback>
+                          ) : null}
+                        </InputGroup>
+                      </Form.Group>
+                    </Row>
+                    <Row className="mb-3">
+                      <Form.Group
+                        as={Col}
+                        md="12"
+                        controlId="validationFormCheckbox"
+                      >
+                        <Form.Check
+                          type="checkbox"
+                          label="Remember for 30 days"
+                          style={{ color: "black" }}
+                          onChange={(e) => setCheckboxChecked(!checkboxChecked)}
+                        />
+                      </Form.Group>
+                    </Row>
+                    <Row className="mb-3">
+                      <Link
+                        to="/forgetpassword"
+                        style={{ color: "black" }}
+                        as={Col}
+                        md="12"
+                      >
+                        Forget Password ?
                       </Link>
-                    </p>
-                  </Row>
-                </Form>
-              )}
-            </Formik>
-          </Col>
+                    </Row>
+                    <Row className="mb-2" style={{ padding: 10 }}>
+                      <Button
+                        block
+                        className={signInStyle.customBtn}
+                        type="submit"
+                        disabled={isSubmitting}
+                      >
+                        Sign In
+                      </Button>
+                    </Row>
+
+                    <Row
+                      className="mb-2"
+                      style={{ paddingLeft: 10, paddingRight: 10 }}
+                    >
+                      <GoogleLogin
+                        clientId="53790554286-8kljikjli2t9hdesgsss5a82u739djf7.apps.googleusercontent.com"
+                        render={(renderProps) => (
+                          <Button
+                            block
+                            className={signInStyle.googleSignBtn}
+                            onClick={renderProps.onClick}
+                          >
+                            Sign In With {"  "}
+                            <InputGroup.Text
+                              style={{
+                                backgroundColor: "#ffff",
+                                border: "white",
+                              }}
+                            >
+                              <FcGoogle />
+                            </InputGroup.Text>
+                          </Button>
+                        )}
+                        onSuccess={responseGoogleSuccess}
+                        // onFailure={responseGoogleError}
+                        cookiePolicy={"single_host_origin"}
+                      />
+                    </Row>
+
+                    <Row className="mb-2">
+                      <p
+                        style={{
+                          color: "black",
+                          paddingTop: 10,
+                          textAlign: "center",
+                        }}
+                      >
+                        Don't have an account ? {""}
+                        <Link to="/signup" style={{ color: "black" }}>
+                          Sign Up
+                        </Link>
+                      </p>
+                    </Row>
+                  </Form>
+                )}
+              </Formik>
+            </Col>
+          </Row>
         </Row>
-      </Row>
-    </Container>
+      </Container>
+    </Fragment>
   );
 };
 export default SignIn;

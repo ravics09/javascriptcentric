@@ -149,17 +149,17 @@ const UserAccount = () => {
       options
     );
     if (result.status === "success") {
-      setProfilePhoto(result.image);
       setTimeout(() => {
         swal({
           title: "Done!",
-          text: `photo uploaded successfully`,
+          text: `${result.message}`,
           icon: "success",
           timer: 2000,
           button: false,
         });
         setProgressPercent(0);
         showUploadPhotoModal(false);
+        window.location.reload();
       }, 2000);
     } else {
       setTimeout(() => setProgressPercent(0), 1000);

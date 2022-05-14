@@ -30,7 +30,6 @@ module.exports = {
 };
 
 async function getProfile(request, response) {
-  console.log("getProfile called");
   const { id } = request.params;
   const profile = await client.get(id);
 
@@ -41,6 +40,10 @@ async function getProfile(request, response) {
   } else {
     const user = await User.findById(id);
     if (user) {
+      let profilePic = user.profilePhoto
+      ? "http://localhost:9090" + user.profilePhoto.replace("public", "")
+      : null;
+
       const customResponse = {
         _id: user._id,
         fullName: user.fullName,
@@ -52,7 +55,7 @@ async function getProfile(request, response) {
         skills: user.skills,
         work: user.work,
         education: user.education,
-        profilePhoto: user.profilePhoto,
+        profilePhoto: profilePic,
         createdAt: moment(user.createdAt).format("YYYY-MM-DD"),
         updatedAt: moment(user.updatedAt).format("YYYY-MM-DD"),
       };
@@ -84,9 +87,19 @@ async function editProfile(request, response) {
     });
 
     User.findByIdAndUpdate(request.params.id, updatedInfo).then((dbUser) => {
+      let profilePic = dbUser.profilePhoto
+      ? "http://localhost:9090" + dbUser.profilePhoto.replace("public", "")
+      : null;
+
+    const customResponse = {
+      _id: dbUser._id,
+      fullName: dbUser.fullName,
+      email: dbUser.email,
+      profilePhoto: profilePic,
+    };
       response.status(200).json({
         message: "Profile updated successfully!",
-        user: dbUser,
+        user: customResponse,
       });
     });
   } else response.status(404).send("User Information Not Found.");
@@ -99,9 +112,20 @@ async function UploadProfileImage(request, response) {
     data.profilePhoto = profilePic ? profilePic : data.profilePhoto;
     data
       .save()
-      .then((doc) => {
+      .then((dbUser) => {
+        let profilePic = dbUser.profilePhoto
+        ? "http://localhost:9090" + dbUser.profilePhoto.replace("public", "")
+        : null;
+  
+      const customResponse = {
+        _id: dbUser._id,
+        fullName: dbUser.fullName,
+        email: dbUser.email,
+        profilePhoto: profilePic,
+      };
+
         response.status(200).json({
-          results: doc,
+          user: customResponse,
           message: "Your photo uploaded successfully",
         });
       })

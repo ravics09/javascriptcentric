@@ -26,6 +26,7 @@ const editUserProfile = async (id, formValues) => {
     .put(url, payload, { headers: AuthHeader() })
     .then((response) => {
       if (response.status === 200) {
+        localStorage.setItem("User", JSON.stringify(response.data.user));
         return {
           status: "success",
           message: response.data.message,
@@ -97,8 +98,8 @@ const uploadProfilePhoto = async (id, formData, options) => {
     .put(url, payload, options)
     .then((response) => {
       if (response.status === 200) {
+        localStorage.setItem("User", JSON.stringify(response.data.user));
         return {
-          image: response.data.results.profilePhoto,
           status: "success",
           message: response.data.message,
         };
