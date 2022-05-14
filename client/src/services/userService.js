@@ -9,7 +9,7 @@ const editUserProfile = async (id, formValues) => {
   const { fullName, email, mobile, location, bio, work, education, skills } =
     formValues;
 
-  const url = `/user/editprofile/${id}`;
+  const url = `http://localhost:9090/user/editprofile/${id}`;
   const payload = {
     fullName,
     email,
@@ -41,7 +41,7 @@ const editUserProfile = async (id, formValues) => {
 };
 
 const getUserProfile = async (id) => {
-  const url = `/user/profile/${id}`;
+  const url = `http://localhost:9090/user/profile/${id}`;
 
   // return axios.get(url, { headers: AuthHeader() }).then(
   return axios
@@ -64,7 +64,7 @@ const getUserProfile = async (id) => {
 
 const contactUsMessage = (formValues) => {
   const { fullName, email, subject, message } = formValues;
-  const url = `/other/sendmessage`;
+  const url = `http://localhost:9090/other/sendmessage`;
   const payload = {
     fullName,
     email,
@@ -89,7 +89,7 @@ const contactUsMessage = (formValues) => {
 };
 
 const uploadProfilePhoto = async (id, formData, options) => {
-  const url = `/other/uploadprofileimage/${id}`;
+  const url = `http://localhost:9090/other/uploadprofileimage/${id}`;
   const payload = formData;
 
   // return axios.put(url, payload, { headers: AuthHeader() }, options).then(
@@ -113,7 +113,7 @@ const uploadProfilePhoto = async (id, formData, options) => {
 };
 
 const addToReadingList = (id, postId) => {
-  const url = `/other/addtoreadinglist/${id}`;
+  const url = `http://localhost:9090/other/addtoreadinglist/${id}`;
   const payload = {
     postId,
   };
@@ -138,7 +138,7 @@ const addToReadingList = (id, postId) => {
 };
 
 const fetchReadingList = async (id) => {
-  const url = `/other/fetchReadingList/${id}`;
+  const url = `http://localhost:9090/other/fetchReadingList/${id}`;
   const readingListId = await axios.get(url, { headers: AuthHeader() });
   const idList = readingListId.data.readingList;
 
@@ -161,7 +161,7 @@ const fetchReadingList = async (id) => {
 };
 
 const removeFromReadingList = async (id, postId) => {
-  const url = `/other/removefromreadinglist/${id}`;
+  const url = `http://localhost:9090/other/removefromreadinglist/${id}`;
   const payload = {
     postId,
   };

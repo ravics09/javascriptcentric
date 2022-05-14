@@ -4,7 +4,7 @@ import axios from "axios";
 
 const signIn = async (payload) => {
   return axios
-    .post("/auth/signin", payload)
+    .post("http://localhost:9090/auth/signin", payload)
     .then((response) => {
       if (response.status === 200) {
         localStorage.setItem("User", JSON.stringify(response.data.user));
@@ -26,7 +26,7 @@ const signIn = async (payload) => {
 
 const googleSignIn = async (payload) => {
   return axios
-    .post("/auth/googlesignin", payload)
+    .post("http://localhost:9090/auth/googlesignin", payload)
     .then((response) => {
       if (response.status === 200) {
         localStorage.setItem("User", JSON.stringify(response.data.user));
@@ -47,7 +47,7 @@ const googleSignIn = async (payload) => {
 
 const signUp = async (payload) => {
   return axios
-    .post("/auth/signup", payload)
+    .post("http://localhost:9090/auth/signup", payload)
     .then((response) => {
       if (response.status === 200) {
         return {
@@ -73,7 +73,7 @@ const signOut = async () => {
 
 const forgotPassword = async (payload) => {
   return axios
-    .post("/auth/forgetpassword", payload)
+    .post("http://localhost:9090/auth/forgetpassword", payload)
     .then((response) => {
       if (response.status === 200) {
         return {

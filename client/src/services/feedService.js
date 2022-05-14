@@ -4,7 +4,7 @@ import AuthHeader from "./authHeader";
 // const API_URL = "http://localhost:9090/feed";
 
 const createPost = async (payload) => {
-  const url = "/feed/createpost";
+  const url = "http://localhost:9090/feed/createpost";
   return axios
     .post(url, payload)
     .then((response) => {
@@ -24,7 +24,7 @@ const createPost = async (payload) => {
 };
 
 const getAllPosts = async () => {
-  const url = "/feed/getPosts";
+  const url = "http://localhost:9090/feed/getPosts";
   return axios
     .get(url)
     .then((response) => {
@@ -42,7 +42,7 @@ const getAllPosts = async () => {
 };
 
 const getPost = async (id) => {
-  const url = `/feed/getpost/${id}`;
+  const url = `http://localhost:9090/feed/getpost/${id}`;
   const payload = {
     id,
   };
@@ -62,7 +62,7 @@ const getPost = async (id) => {
 };
 
 const addComment = (postId, userId, comment) => {
-  const url = `/feed/createnewcomment/${postId}`;
+  const url = `http://localhost:9090/feed/createnewcomment/${postId}`;
   const payload = {
     comment,
     userId,
@@ -88,7 +88,7 @@ const addComment = (postId, userId, comment) => {
 };
 
 const getUserPosts = (userId) => {
-  const url = `/feed/getuserposts/${userId}`;
+  const url = `http://localhost:9090/feed/getuserposts/${userId}`;
   return axios.get(url).then(
     (response) => {
       if (response.status === 200) {
@@ -106,7 +106,7 @@ const getUserPosts = (userId) => {
 };
 
 const editPost = async (id, payload) => {
-  const url = `/feed/editpost/${id}`;
+  const url = `http://localhost:9090/feed/editpost/${id}`;
   return axios
     .put(url, payload)
     .then((response) => {
@@ -126,7 +126,7 @@ const editPost = async (id, payload) => {
 };
 
 const deletePost = async (id) => {
-  const url = `/feed/deletepost/${id}`;
+  const url = `http://localhost:9090/feed/deletepost/${id}`;
   return axios
     .delete(url, { headers: AuthHeader() })
     .then((response) => {

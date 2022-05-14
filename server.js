@@ -12,14 +12,14 @@ const connectDatabase = require("./database/connectDatabase");
 connectDatabase();
 
 // Set PORT Number
-const PORT = process.env.PORT || 9090;
+const PORT = 9090;
 
 // Use Middlewares in our app.
 app.use(cors());
 app.use(compression());
 app.use(morgan("tiny"));
 app.use(helmet.hidePoweredBy());
-app.use("/public",express.static("public"));
+app.use(express.static(path.join(__dirname, "public")));
 app.use(express.json({ limit: "30mb", extended: true }));
 app.use(express.urlencoded({ limit: "30mb", extended: true }));
 
@@ -35,10 +35,10 @@ app.use("/other", require("./routers/contactUsRouter"));
 //   console.log("resolvedPath", resolvedPath);
 //   res.sendFile(resolvedPath, 'Base64');
 // })
-app.use(express.static(path.join(__dirname, "./client/build")));
-app.get("*", function (request, response) {
-  response.sendFile(path.join(__dirname, "client", "build", "index.html"));
-});
+// app.use(express.static(path.join(__dirname, "./client/build")));
+// app.get("*", function (request, response) {
+//   response.sendFile(path.join(__dirname, "client", "build", "index.html"));
+// });
 
 // listen server on given port
 app.listen(PORT, (err, res) => {
