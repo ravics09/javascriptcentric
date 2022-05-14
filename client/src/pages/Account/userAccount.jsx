@@ -66,7 +66,10 @@ const UserAccount = () => {
   const [previewPhoto, setPreviewPhoto] = useState(null);
   const [progressPercent, setProgressPercent] = useState(0);
   const { loggedInUser } = useSelector((state) => state.AuthReducer);
-
+  const [dimensions, setDimensions] = useState({
+    height: window.innerHeight,
+    width: window.innerWidth,
+  });
   useEffect(() => {
     if (loggedInUser) {
       setUserId(loggedInUser._id);
@@ -143,7 +146,7 @@ const UserAccount = () => {
     const result = await UserService.uploadProfilePhoto(
       userId,
       formData,
-      options,
+      options
     );
     if (result.status === "success") {
       setProfilePhoto(result.image);
@@ -181,7 +184,10 @@ const UserAccount = () => {
   return (
     <Fragment>
       <Navbar />
-      <Container className={userAccountStyle.container}>
+      <Container
+        className={userAccountStyle.container}
+        style={{ minHeight: dimensions.height }}
+      >
         <Row>
           <Col md={8}>
             <Container>
@@ -546,9 +552,7 @@ const UserAccount = () => {
               </Row>
               <Row className="mb-2">
                 <div className={userAccountStyle.uploadPhotoBtn}>
-                  <Button type="submit">
-                    Upload Photo
-                  </Button>
+                  <Button type="submit">Upload Photo</Button>
                 </div>
               </Row>
             </Form>

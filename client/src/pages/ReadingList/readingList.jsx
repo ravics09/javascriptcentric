@@ -130,7 +130,7 @@ const ReadingList = () => {
   return (
     <Fragment>
       <Navbar />
-      <Container className={readingListStyle.container} style={{minHeight:dimensions.height-100}}>
+      <Container className={readingListStyle.container} style={{minHeight:dimensions.height}}>
         <Row className={readingListStyle.topRow}>
           <div className={readingListStyle.topRowItems}>
             <h2>Reading list ({readingList ? readingList.length : 0})</h2>

@@ -1,7 +1,7 @@
 .container {
   background-color: #181a1f !important;
   color: white !important;
-  margin-top: 100px;
+  padding-top: 100px;
   border-radius: 15px;
 }
 .headerCard {

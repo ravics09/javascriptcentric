@@ -46,10 +46,12 @@ const FullArticle = () => {
   const [userId, setUserId] = useState("");
   const [comments, setComments] = useState([]);
   const [profilePhoto, setProfilePhoto] = useState(null);
-  const { loggedInUser } = useSelector(
-    (state) => state.AuthReducer
-  );
-
+  const { loggedInUser } = useSelector((state) => state.AuthReducer);
+  const [dimensions, setDimensions] = useState({
+    height: window.innerHeight,
+    width: window.innerWidth,
+  });
+  
   const fetchData = async () => {
     const result = await FeedService.getPost(id);
     if (result) {
@@ -172,8 +174,11 @@ const FullArticle = () => {
   return (
     <Fragment>
       <Navbar />
-      <Container className={fullArticleStyle.container}>
-        <Row className="mb-3">
+      <Container
+        className={fullArticleStyle.container}
+        style={{ minHeight: dimensions.height }}
+      >
+        <Row>
           <Col md={1} className={fullArticleStyle.firstColumn}>
             <Row className={fullArticleStyle.firstColumnItem}>
               <FaHeart color="red" size={24} />

@@ -2,7 +2,7 @@
   background-color: #181a1f !important;
   padding-left: 10px;
   padding-right: 10px;
-  margin-top: 100px;
+  padding-top: 100px;
 }
 .firstColumn {
   background-color: #181a1f !important;
@@ -10,7 +10,7 @@
 }
 .secondColumn {
   background-color: #242424 !important;
-  padding-bottom: 10px;
+  margin-bottom: 10px;
 }
 .thirdColumn {
   background-color: #181a1f !important;
@@ -23,9 +23,9 @@
   padding-bottom: 20px;
 }
 .coverImage {
-  /* background-color: #181a1f !important; */
+  /* background-color: #c2c9d9 !important; */
   padding-top: 10px;
-  /* padding-bottom: 10px; */
+  padding-bottom: 10px;
 }
 .postDetails {
   background-color: #242424 !important;

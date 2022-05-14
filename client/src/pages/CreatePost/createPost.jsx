@@ -29,7 +29,7 @@ const validationSchema = yup.object().shape({
 
 const initialValues = {
   title: "",
-  content: ""
+  content: "",
   // tags: [],
 };
 
@@ -40,6 +40,10 @@ const CreatePost = () => {
   const [userId, setUserId] = useState("");
   const [isLoading, setLoading] = useState(false);
   const { loggedInUser } = useSelector((state) => state.AuthReducer);
+  const [dimensions, setDimensions] = useState({
+    height: window.innerHeight,
+    width: window.innerWidth,
+  });
 
   const simulateNetworkRequest = () => {
     return new Promise((resolve) => setTimeout(resolve, 2000));
@@ -94,8 +98,11 @@ const CreatePost = () => {
   return (
     <Fragment>
       <Navbar />
-      <Container className={createPostStyle.container}>
-        <Row className="mb-3">
+      <Container
+        className={createPostStyle.container}
+        style={{ minHeight: dimensions.height }}
+      >
+        <Row >
           <Col xl={12} lg={6} md={9}>
             <Formik
               validationSchema={validationSchema}

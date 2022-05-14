@@ -15,7 +15,7 @@ const App = () => {
   };
 
   const theme2 = {
-    backgroundColor: "white",
+    backgroundColor: "#181a1f",
     height: "100%",
   };
 

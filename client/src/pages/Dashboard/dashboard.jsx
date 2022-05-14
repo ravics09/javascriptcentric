@@ -117,7 +117,7 @@ const Dashboard = () => {
       <Navbar />
       <Container
         className={dashboardStyle.container}
-        style={{ minHeight: dimensions.height - 100 }}
+        style={{ minHeight: dimensions.height }}
       >
         <Row className={dashboardStyle.topRow}>
           <h2>Dashboard</h2>

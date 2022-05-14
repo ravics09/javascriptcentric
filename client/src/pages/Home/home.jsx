@@ -176,9 +176,9 @@ const Home = () => {
       <Navbar />
       <Container
         className={homeStyle.container}
-        style={{ minHeight: dimensions.height - 100 }}
+        style={{ minHeight: dimensions.height }}
       >
-        <Row className="mb-3">
+        <Row className="pb-3">
           <Col xl={2} lg={2} md={2}>
             <Container fluid="xl">
               <Row className={homeStyle.firstColumnFirstRow}>
