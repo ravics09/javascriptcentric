@@ -149,12 +149,15 @@ async function addToReadingList(request, response) {
       $push: { readingList: newItem },
     };
 
-    User.findByIdAndUpdate(id, updateReadingList).then((res) => {
-      response.status(200).json({
-        message: "New Article Added To Reading List!",
-        readingList: res.readingList,
-      });
-    });
+    User.findByIdAndUpdate({ _id: id }, updateReadingList, { new: true }).then(
+      (res) => {
+        let readIdList = res.readingList.map((item) => item.postId);
+        response.status(200).json({
+          message: "New Article Added To Reading List!",
+          updatedReadingList: readIdList,
+        });
+      }
+    );
   }
 }
 
@@ -168,12 +171,12 @@ async function removeFromReadingList(request, response) {
         readingList: { postId: postId },
       },
     },
-    {new: true},
-  ).then((result) => {
-    console.log("result", result);
+    { new: true }
+  ).then((res) => {
+    let readIdList = res.readingList.map((item) => item.postId);
     response.status(200).json({
       message: "Selected Article Removed From Reading List!",
-      readingList: result.readingList,
+      updatedReadingList: readIdList,
     });
   });
 }
@@ -182,8 +185,10 @@ async function fetchReadingList(request, response) {
   const { id } = request.params;
   const user = await User.findById(id);
   if (user) {
+    let readIdList = user.readingList.map((item) => item.postId);
     response.status(200).json({
       readingList: user.readingList,
+      idList: readIdList,
     });
   } else {
     response.status(404).send("Somthing is wrong.");

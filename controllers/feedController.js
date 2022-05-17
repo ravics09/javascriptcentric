@@ -2,11 +2,11 @@ const User = require("./../models/userModel");
 const Feed = require("./../models/feedModel");
 
 async function createPost(request, response) {
-  const { userId, postTitle, postContent} = request.body;
+  const { userId, postTitle, postContent } = request.body;
   const feed = new Feed({
     postedBy: userId,
     postTitle: postTitle,
-    postContent: postContent
+    postContent: postContent,
   });
 
   feed.save().then(() => {
@@ -36,7 +36,14 @@ async function getPost(request, response) {
 async function getReadingPost(request, response) {
   const { id } = request.params;
   Feed.findById({ _id: id })
-    .select(["postedBy", "postTitle", "likeCount", "commentCount", "createdAt", "profilePhoto"])
+    .select([
+      "postedBy",
+      "postTitle",
+      "likeCount",
+      "commentCount",
+      "createdAt",
+      "profilePhoto",
+    ])
     .populate("postedBy", ["fullName", "email", "profilePhoto"])
     .exec((error, posts) => {
       if (error) {
@@ -53,7 +60,14 @@ async function getReadingPost(request, response) {
 
 async function getPosts(request, response) {
   Feed.find({})
-    .select(["postedBy", "postTitle", "likeCount", "commentCount", "createdAt"])
+    .select([
+      "postedBy",
+      "postTitle",
+      "likeCount",
+      "commentCount",
+      "createdAt",
+      "comments",
+    ])
     .populate("postedBy", ["fullName", "email", "profilePhoto"])
     .exec((error, posts) => {
       if (error) {

@@ -8,6 +8,8 @@ import {
   EDIT_POST_SUCCESS,
   EDIT_POST_FAILED,
   DELETE_POST_SUCCESS,
-  DELETE_POST_FAILED
+  DELETE_POST_FAILED,
+  ADD_TO_READING_LIST_SUCCESS,
+  ADD_TO_READING_LIST_FAILED
 } from "./types";
 import FeedService from "./../services/feedService";

@@ -3,9 +3,13 @@ import { useNavigate } from "react-router-dom";
 import { Container, Row, Col, Button, Image } from "react-bootstrap";
 import moment from "moment";
 import swal from "sweetalert";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { FaHeart, FaRegComment } from "react-icons/fa";
 
+import {
+  addtoreadinglist,
+  removefromreadinglist,
+} from "../../actions/userAction";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Navbar from "../../components/navbar";
 import UserService from "../../services/userService";
@@ -14,9 +18,12 @@ import PLACEHOLDER_IMG from "../../assets/images/h1.png";
 
 const ReadingList = () => {
   const navigate = useNavigate();
-  const [readingList, setReadingList] = useState([]);
+  const dispatch = useDispatch();
+  const [readingListItems, setReadingListItems] = useState([]);
   const [userId, setUserId] = useState("");
   const { loggedInUser } = useSelector((state) => state.AuthReducer);
+  const { readingList } = useSelector((state) => state.UserReducer);
+
   const [dimensions, setDimensions] = useState({
     height: window.innerHeight,
     width: window.innerWidth,
@@ -25,13 +32,13 @@ const ReadingList = () => {
   useEffect(() => {
     if (loggedInUser) {
       setUserId(loggedInUser._id);
-      fecthReadingListID(loggedInUser._id);
+      fecthReadingListItem(readingList);
     }
 
-    async function fecthReadingListID(id) {
-      const result = await UserService.fetchReadingList(id);
+    async function fecthReadingListItem(idList) {
+      const result = await UserService.fetchReadingList(idList);
       if (result.status === "success") {
-        setReadingList(result.readingList);
+        setReadingListItems(result.readingListItems);
       } else {
         swal({
           title: "Error!",
@@ -49,27 +56,28 @@ const ReadingList = () => {
   };
 
   const removeItemFromReadingList = async (postId) => {
-    const result = await UserService.removeFromReadingList(userId, postId);
-    if (result.status === "success") {
-      swal({
-        title: "Done!",
-        text: `${result.message}`,
-        icon: "success",
-        timer: 2000,
-        button: false,
-      });
-      setTimeout(() => {
-        window.location.reload();
-      }, 2500);
-    } else {
-      swal({
-        title: "Error!",
-        text: `${result.message}`,
-        icon: "warning",
-        timer: 2000,
-        button: false,
-      });
-    }
+    dispatch(removefromreadinglist(userId, postId)).then((result) => {
+      if (result.status === "success") {
+        swal({
+          title: "Done!",
+          text: `${result.message}`,
+          icon: "success",
+          timer: 2000,
+          button: false,
+        });
+        setTimeout(() => {
+          window.location.reload();
+        }, 2500);
+      } else {
+        swal({
+          title: "Error!",
+          text: `${result.message}`,
+          icon: "warning",
+          timer: 2000,
+          button: false,
+        });
+      }
+    });
   };
 
   const RenderAllPost = ({ item, index }) => {
@@ -141,8 +149,8 @@ const ReadingList = () => {
             </p>
           </Col>
           <Col md={9} className={readingListStyle.readingListSection}>
-            {readingList
-              ? readingList.map((item, index) => (
+            {readingListItems
+              ? readingListItems.map((item, index) => (
                   <RenderAllPost item={item} index={index} />
                 ))
               : null}

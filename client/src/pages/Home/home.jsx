@@ -1,27 +1,32 @@
 import React, { useState, useEffect, Fragment } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import moment from "moment";
 import swal from "sweetalert";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import homeStyle from "./home.module.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { FaHeart, FaRegComment } from "react-icons/fa";
 import { Container, Row, Col, Button, Image } from "react-bootstrap";
 
+import {
+  addtoreadinglist,
+  removefromreadinglist,
+} from "../../actions/userAction";
 import Navbar from "../../components/navbar";
 
-import RN_IMG from "../../assets/images/rn.jpg";
-import NODE_JPG from "../../assets/images/node.jpg";
-import REACTJS_IMG from "../../assets/images/react.png";
+// import RN_IMG from "../../assets/images/rn.jpg";
+// import NODE_JPG from "../../assets/images/node.jpg";
+// import REACTJS_IMG from "../../assets/images/react.png";
 import PLACEHOLDER_IMG from "../../assets/images/h1.png";
-import JAVASCRIPT_IMG2 from "../../assets/images/js2.png";
+// import JAVASCRIPT_IMG2 from "../../assets/images/js2.png";
 
 // Import Services
-import UserService from "../../services/userService";
+// import UserService from "../../services/userService";
 import FeedService from "../../services/feedService";
 
 const Home = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [userPosts, setUserPosts] = useState([]);
   const [userId, setUserId] = useState();
 
@@ -31,6 +36,7 @@ const Home = () => {
   });
 
   const { loggedInUser } = useSelector((state) => state.AuthReducer);
+  const { readingList } = useSelector((state) => state.UserReducer);
 
   useEffect(() => {
     window.addEventListener("resize", handleResize);
@@ -42,13 +48,6 @@ const Home = () => {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
-
-  const handleResize = () => {
-    setDimensions({
-      height: window.innerHeight,
-      width: window.innerWidth,
-    });
-  };
 
   const fetchPostData = async () => {
     const result = await FeedService.getAllPosts();
@@ -65,24 +64,11 @@ const Home = () => {
     }
   };
 
-  const openJavaScriptSection = () => {
-    navigate("/topic/javascript");
-  };
-
-  const openReactJSSection = () => {
-    navigate("/topic/reactjs");
-  };
-
-  const openReactNativeSection = () => {
-    navigate("/topic/reactnative");
-  };
-
-  const openNodeJSSection = () => {
-    navigate("/topic/nodejs");
-  };
-
-  const openMongoDBSection = () => {
-    navigate("/topic/mongodb");
+  const handleResize = () => {
+    setDimensions({
+      height: window.innerHeight,
+      width: window.innerWidth,
+    });
   };
 
   const openSelectedPost = (item) => {
@@ -91,30 +77,59 @@ const Home = () => {
   };
 
   const onSave = async (postId) => {
-    const result = await UserService.addToReadingList(userId, postId);
-    if (result.status === "success") {
-      swal({
-        title: "Done!",
-        text: `${result.message}`,
-        icon: "success",
-        timer: 2000,
-        button: false,
-      });
-    } else {
-      swal({
-        title: "Error!",
-        text: `${result.message}`,
-        icon: "warning",
-        timer: 2000,
-        button: false,
-      });
-    }
+    dispatch(addtoreadinglist(userId, postId)).then((result) => {
+      if (result.status === "success") {
+        console.log("Added successfully to list");
+        swal({
+          title: "Done!",
+          text: `${result.message}`,
+          icon: "success",
+          timer: 2000,
+          button: false,
+        });
+      } else {
+        swal({
+          title: "Error!",
+          text: `${result.message}`,
+          icon: "warning",
+          timer: 2000,
+          button: false,
+        });
+      }
+    });
+  };
+
+  const onUnSave = async (postId) => {
+    dispatch(removefromreadinglist(userId, postId)).then((result) => {
+      if (result.status === "success") {
+        console.log("Removed successfully from list");
+        swal({
+          title: "Done!",
+          text: `${result.message}`,
+          icon: "success",
+          timer: 2000,
+          button: false,
+        });
+      } else {
+        swal({
+          title: "Error!",
+          text: `${result.message}`,
+          icon: "warning",
+          timer: 2000,
+          button: false,
+        });
+      }
+    });
   };
 
   const PostCard = ({ item, index }) => {
     const formateDate = moment(item.createdAt).format("MMM Do");
     const hourAgo = moment(item.createdAt).startOf("hour").fromNow();
     const minAgo = moment(item.createdAt).startOf("minute").fromNow();
+    let readingStatus = false;
+    if (readingList.length > 0 && readingList.includes(item._id)) {
+      readingStatus = true;
+    }
 
     if (item.postedBy.profilePhoto) {
       var imgstr = item.postedBy.profilePhoto;
@@ -156,14 +171,16 @@ const Home = () => {
             <span>
               <FaHeart color="red" /> &nbsp; {item.likes} Likes &nbsp;{" "}
               <FaRegComment color="#0C6EFD" /> &nbsp;{" "}
-              {item.comments ? item.comments.length : null} Comments
+              {item.comments ? item.comments.length : null}
             </span>
             <Button
               variant="outline-dark"
               size="sm"
-              onClick={() => onSave(item._id)}
+              onClick={() =>
+                readingStatus ? onUnSave(item._id) : onSave(item._id)
+              }
             >
-              Save
+              {readingStatus ? "Unsave" : "Save"}
             </Button>
           </div>
         </div>
@@ -179,13 +196,14 @@ const Home = () => {
         style={{ minHeight: dimensions.height }}
       >
         <Row className="pb-3">
-          <Col xl={2} lg={2} md={2}>
+          <Col xl={2} lg={3}>
             <Container fluid="xl">
               <Row className={homeStyle.firstColumnFirstRow}>
                 <div
                   style={{
                     paddingTop: 10,
                     paddingBottom: 10,
+                    paddingRight: 10,
                   }}
                 >
                   <article>
@@ -217,7 +235,7 @@ const Home = () => {
               </Row>
             </Container>
           </Col>
-          <Col xl={7} lg={7} md={7} xs={12}>
+          <Col xl={7} lg={6} md={12} xs={12}>
             <Container fluid="xl">
               {userPosts
                 ? userPosts.map((item, index) => (
@@ -226,7 +244,7 @@ const Home = () => {
                 : null}
             </Container>
           </Col>
-          <Col xl={3} lg={3} md={3}>
+          <Col xl={3} lg={3}>
             <Container fluid="xl">
               <Row className={homeStyle.firstColumnFirstRow}>
                 <div

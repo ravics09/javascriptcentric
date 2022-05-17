@@ -43,7 +43,7 @@ const userSchema = new Schema(
     },
     readingList: [
       {
-        postId: String,
+        postId: String
       }
     ],
     hash: {

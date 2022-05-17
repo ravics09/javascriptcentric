@@ -51,11 +51,14 @@ async function signInUser(request, response) {
       ? "http://localhost:9090" + user.profilePhoto.replace("public", "")
       : null;
 
+    let readIdList = user.readingList.map((item) => item.postId);
+
     const customResponse = {
       _id: user._id,
       fullName: user.fullName,
       email: user.email,
       profilePhoto: profilePic,
+      readingList: readIdList,
     };
     bcrypt.compare(password, user.hash, (err, compareRes) => {
       if (err) {

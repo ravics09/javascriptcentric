@@ -8,6 +8,7 @@ const signIn = async (payload) => {
     .then((response) => {
       if (response.status === 200) {
         localStorage.setItem("User", JSON.stringify(response.data.user));
+        localStorage.setItem("readingList", JSON.stringify(response.data.user.readingList));
         localStorage.setItem("AccessToken", JSON.stringify(response.data.accessToken));
         return {
           status: "success",

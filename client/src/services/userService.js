@@ -113,6 +113,25 @@ const uploadProfilePhoto = async (id, formData, options) => {
     });
 };
 
+const fetchReadingList = async (idList) => {
+  let readingList = [];
+  if (idList.length > 0) {
+    for (let i = 0; i < idList.length; i++) {
+      let result = await FeedService.getReadingPost(idList[i]);
+      if (result.post !== null) readingList.push(result.post);
+    }
+    return {
+      status: "success",
+      readingListItems: readingList,
+    };
+  } else {
+    return {
+      status: "failed",
+      message: "There are no item in the reading list",
+    };
+  }
+};
+
 const addToReadingList = async (id, postId) => {
   const url = `http://localhost:9090/user/addtoreadinglist/${id}`;
   const payload = {
@@ -123,10 +142,11 @@ const addToReadingList = async (id, postId) => {
     .put(url, payload)
     .then((response) => {
       if (response.status === 200) {
-        console.log("readinglist", response.readingList);
+        localStorage.setItem("readingList", JSON.stringify(response.data.updatedReadingList));
         return {
           status: "success",
-          message: response.data.message, // "New Article Added To Reading List!",
+          message: response.data.message,
+          updatedReadingList: response.data.updatedReadingList
         };
       }
     })
@@ -136,29 +156,6 @@ const addToReadingList = async (id, postId) => {
         message: error.response.data.message,
       };
     });
-};
-
-const fetchReadingList = async (id) => {
-  const url = `http://localhost:9090/user/fetchReadingList/${id}`;
-  const readingListId = await axios.get(url, { headers: AuthHeader() });
-  const idList = readingListId.data.readingList;
-
-  let readingList = [];
-  if (idList.length > 0) {
-    for (let i = 0; i < idList.length; i++) {
-      let result = await FeedService.getReadingPost(idList[i].postId);
-      if (result.post !== null) readingList.push(result.post);
-    }
-    return {
-      status: "success",
-      readingList: readingList,
-    };
-  } else {
-    return {
-      status: "failed",
-      message: "There are no item in the reading list",
-    };
-  }
 };
 
 const removeFromReadingList = async (id, postId) => {
@@ -171,9 +168,11 @@ const removeFromReadingList = async (id, postId) => {
     .put(url, payload)
     .then((response) => {
       if (response.status === 200) {
+        localStorage.setItem("readingList", JSON.stringify(response.data.updatedReadingList));
         return {
           status: "success",
-          message: "Selected Article Removed From Reading List!",
+          message: response.data.message,
+          updatedReadingList: response.data.updatedReadingList
         };
       }
     })

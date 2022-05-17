@@ -19,6 +19,10 @@ import { FaHeart, FaComment, FaStarHalfAlt } from "react-icons/fa";
 import "bootstrap/dist/css/bootstrap.min.css";
 import fullArticleStyle from "./fullArticle.module.css";
 
+import {
+  addtoreadinglist,
+  removefromreadinglist,
+} from "../../actions/userAction";
 import LEADER_IMG from "../../assets/images/leader.jpeg";
 import PLACEHOLDER_IMG from "../../assets/images/h1.png";
 import COVERIMAGE from "../../assets/images/coverImage.jpg";
@@ -40,18 +44,22 @@ const initialValues = {
 
 const FullArticle = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const { id } = useParams();
   const [postData, setPostData] = useState({});
   const [authorDetails, setAuthorDetails] = useState({});
   const [userId, setUserId] = useState("");
   const [comments, setComments] = useState([]);
   const [profilePhoto, setProfilePhoto] = useState(null);
+  const [savedStatus, setSavedStatus] = useState(false);
   const { loggedInUser } = useSelector((state) => state.AuthReducer);
+  const { readingList } = useSelector((state) => state.UserReducer);
+
   const [dimensions, setDimensions] = useState({
     height: window.innerHeight,
     width: window.innerWidth,
   });
-  
+
   const fetchData = async () => {
     const result = await FeedService.getPost(id);
     if (result) {
@@ -59,6 +67,9 @@ const FullArticle = () => {
       setComments(result.post.comments);
       setAuthorDetails(result.post.postedBy);
       setProfilePhoto(result.post.postedBy.profilePhoto);
+      if (readingList.includes(result.post._id)) {
+        setSavedStatus(true);
+      }
     }
   };
 
@@ -156,7 +167,59 @@ const FullArticle = () => {
     );
   };
 
-  const EditPost = (postData, authorDetails) => {
+  const onLike = async (postData) => {};
+
+  const onSave = async (postId) => {
+    dispatch(addtoreadinglist(userId, postId)).then((result) => {
+      if (result.status === "success") {
+        swal({
+          title: "Done!",
+          text: `${result.message}`,
+          icon: "success",
+          timer: 2000,
+          button: false,
+        });
+        setTimeout(() => {
+          window.location.reload();
+        }, 2500);
+      } else {
+        swal({
+          title: "Error!",
+          text: `${result.message}`,
+          icon: "warning",
+          timer: 2000,
+          button: false,
+        });
+      }
+    });
+  };
+
+  const onUnSave = async (postId) => {
+    dispatch(removefromreadinglist(userId, postId)).then((result) => {
+      if (result.status === "success") {
+        swal({
+          title: "Done!",
+          text: `${result.message}`,
+          icon: "success",
+          timer: 2000,
+          button: false,
+        });
+        setTimeout(() => {
+          window.location.reload();
+        }, 2500);
+      } else {
+        swal({
+          title: "Error!",
+          text: `${result.message}`,
+          icon: "warning",
+          timer: 2000,
+          button: false,
+        });
+      }
+    });
+  };
+
+  const editPost = (postData, authorDetails) => {
     const item = { postData, authorDetails };
     navigate(`/${id}/editpost`, { data: item });
   };
@@ -224,6 +287,7 @@ const FullArticle = () => {
                         type="submit"
                         variant="danger"
                         size="sm"
+                        onClick={() => onLike(postData)}
                       >
                         Like
                       </Button>
@@ -233,7 +297,7 @@ const FullArticle = () => {
                         className={fullArticleStyle.editLikeSaveBtn}
                         variant="primary"
                         size="sm"
-                        onClick={() => EditPost(postData, authorDetails)}
+                        onClick={() => editPost(postData, authorDetails)}
                       >
                         Edit
                       </Button>
@@ -256,8 +320,13 @@ const FullArticle = () => {
                         type="submit"
                         variant="primary"
                         size="sm"
+                        onClick={() =>
+                          savedStatus
+                            ? onUnSave(postData._id)
+                            : onSave(postData._id)
+                        }
                       >
-                        Save
+                        {savedStatus ? "Unsave" : "Save"}
                       </Button>
                     </>
                   )}
