@@ -1,34 +1,26 @@
 import React, { useState, useEffect, Fragment } from "react";
-import { useNavigate } from "react-router-dom";
 import moment from "moment";
 import swal from "sweetalert";
-import { useSelector, useDispatch } from "react-redux";
-import homeStyle from "./home.module.css";
 import "bootstrap/dist/css/bootstrap.min.css";
+import { useNavigate } from "react-router-dom";
 import { FaHeart, FaRegComment } from "react-icons/fa";
+import { useSelector, useDispatch } from "react-redux";
 import { Container, Row, Col, Button, Image } from "react-bootstrap";
 
 import {
   addtoreadinglist,
   removefromreadinglist,
 } from "../../actions/userAction";
+import homeStyle from "./home.module.css";
 import Navbar from "../../components/navbar";
-
-// import RN_IMG from "../../assets/images/rn.jpg";
-// import NODE_JPG from "../../assets/images/node.jpg";
-// import REACTJS_IMG from "../../assets/images/react.png";
-import PLACEHOLDER_IMG from "../../assets/images/h1.png";
-// import JAVASCRIPT_IMG2 from "../../assets/images/js2.png";
-
-// Import Services
-// import UserService from "../../services/userService";
 import FeedService from "../../services/feedService";
+import PLACEHOLDER_IMG from "../../assets/images/h1.png";
 
 const Home = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [userPosts, setUserPosts] = useState([]);
   const [userId, setUserId] = useState();
+  const [userPosts, setUserPosts] = useState([]);
 
   const [dimensions, setDimensions] = useState({
     height: window.innerHeight,
@@ -37,6 +29,7 @@ const Home = () => {
 
   const { loggedInUser } = useSelector((state) => state.AuthReducer);
   const { readingList } = useSelector((state) => state.UserReducer);
+  const { likedByList } = useSelector((state) => state.FeedReducer);
 
   useEffect(() => {
     window.addEventListener("resize", handleResize);
@@ -169,8 +162,8 @@ const Home = () => {
           </div>
           <div className={homeStyle.cardFooter}>
             <span>
-              <FaHeart color="red" /> &nbsp; {item.likes} Likes &nbsp;{" "}
-              <FaRegComment color="#0C6EFD" /> &nbsp;{" "}
+              <FaHeart color="red" /> &nbsp; {item.likes} {item.likedBy.length}{" "}
+              &nbsp; <FaRegComment color="#0C6EFD" /> &nbsp;{" "}
               {item.comments ? item.comments.length : null}
             </span>
             <Button
@@ -195,7 +188,7 @@ const Home = () => {
         className={homeStyle.container}
         style={{ minHeight: dimensions.height }}
       >
-        <Row className="pb-3">
+        <Row>
           <Col xl={2} lg={3}>
             <Container fluid="xl">
               <Row className={homeStyle.firstColumnFirstRow}>
@@ -203,7 +196,6 @@ const Home = () => {
                   style={{
                     paddingTop: 10,
                     paddingBottom: 10,
-                    paddingRight: 10,
                   }}
                 >
                   <article>

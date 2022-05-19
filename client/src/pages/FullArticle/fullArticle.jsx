@@ -23,6 +23,7 @@ import {
   addtoreadinglist,
   removefromreadinglist,
 } from "../../actions/userAction";
+import { addtolikedby, removefromlikedby } from "./../../actions/feedAction";
 import LEADER_IMG from "../../assets/images/leader.jpeg";
 import PLACEHOLDER_IMG from "../../assets/images/h1.png";
 import COVERIMAGE from "../../assets/images/coverImage.jpg";
@@ -52,8 +53,10 @@ const FullArticle = () => {
   const [comments, setComments] = useState([]);
   const [profilePhoto, setProfilePhoto] = useState(null);
   const [savedStatus, setSavedStatus] = useState(false);
+  const [likedStatus, setLikedStatus] = useState(false);
   const { loggedInUser } = useSelector((state) => state.AuthReducer);
   const { readingList } = useSelector((state) => state.UserReducer);
+  const { likedByList } = useSelector((state) => state.FeedReducer);
 
   const [dimensions, setDimensions] = useState({
     height: window.innerHeight,
@@ -63,6 +66,12 @@ const FullArticle = () => {
   const fetchData = async () => {
     const result = await FeedService.getPost(id);
     if (result) {
+      let arr = result.post.likedBy;
+      arr.forEach((item) => {
+        if (item.userId === loggedInUser._id) {
+          setLikedStatus(true);
+        }
+      });
       setPostData(result.post);
       setComments(result.post.comments);
       setAuthorDetails(result.post.postedBy);
@@ -76,8 +85,8 @@ const FullArticle = () => {
   useEffect(() => {
     if (loggedInUser) {
       setUserId(loggedInUser._id);
+      fetchData();
     }
-    fetchData();
   }, []);
 
   const ColoredLine = ({ color }) => (
@@ -167,7 +176,55 @@ const FullArticle = () => {
     );
   };
 
-  const onLike = async (postData) => {};
+  const onLike = async (postId) => {
+    dispatch(addtolikedby(postId, userId)).then((result) => {
+      if (result.status === "success") {
+        swal({
+          title: "Done!",
+          text: `${result.message}`,
+          icon: "success",
+          timer: 2000,
+          button: false,
+        });
+        setTimeout(() => {
+          window.location.reload();
+        }, 2500);
+      } else {
+        swal({
+          title: "Error!",
+          text: `${result.message}`,
+          icon: "warning",
+          timer: 2000,
+          button: false,
+        });
+      }
+    });
+  };
+
+  const onDisLike = async (postId) => {
+    dispatch(removefromlikedby(postId, userId)).then((result) => {
+      if (result.status === "success") {
+        swal({
+          title: "Done!",
+          text: `${result.message}`,
+          icon: "success",
+          timer: 2000,
+          button: false,
+        });
+        setTimeout(() => {
+          window.location.reload();
+        }, 2500);
+      } else {
+        swal({
+          title: "Error!",
+          text: `${result.message}`,
+          icon: "warning",
+          timer: 2000,
+          button: false,
+        });
+      }
+    });
+  };
 
   const onSave = async (postId) => {
     dispatch(addtoreadinglist(userId, postId)).then((result) => {
@@ -245,7 +302,7 @@ const FullArticle = () => {
           <Col md={1} className={fullArticleStyle.firstColumn}>
             <Row className={fullArticleStyle.firstColumnItem}>
               <FaHeart color="red" size={24} />
-              <p>5 Likes</p>
+              <p>{postData.likedBy ? postData.likedBy.length : null} Likes</p>
             </Row>
             <Row className={fullArticleStyle.firstColumnItem}>
               <FaStarHalfAlt color="yellow" size={24} />
@@ -280,28 +337,15 @@ const FullArticle = () => {
                 </div>
                 <div>
                   {authorDetails._id === userId ? (
-                    <>
-                      <Button
-                        block
-                        className={fullArticleStyle.editLikeSaveBtn}
-                        type="submit"
-                        variant="danger"
-                        size="sm"
-                        onClick={() => onLike(postData)}
-                      >
-                        Like
-                      </Button>
-                      &nbsp;&nbsp;&nbsp;
-                      <Button
-                        block
-                        className={fullArticleStyle.editLikeSaveBtn}
-                        variant="primary"
-                        size="sm"
-                        onClick={() => editPost(postData, authorDetails)}
-                      >
-                        Edit
-                      </Button>
-                    </>
+                    <Button
+                      block
+                      className={fullArticleStyle.editLikeSaveBtn}
+                      variant="primary"
+                      size="sm"
+                      onClick={() => editPost(postData, authorDetails)}
+                    >
+                      Edit
+                    </Button>
                   ) : (
                     <>
                       <Button
@@ -310,8 +354,13 @@ const FullArticle = () => {
                         type="submit"
                         variant="danger"
                         size="sm"
+                        onClick={() =>
+                          likedStatus
+                            ? onDisLike(postData._id)
+                            : onLike(postData._id)
+                        }
                       >
-                        Like
+                        {likedStatus ? "Dislike" : "Like"}
                       </Button>
                       &nbsp;&nbsp;&nbsp;
                       <Button
@@ -354,7 +403,7 @@ const FullArticle = () => {
             <Row className={fullArticleStyle.discussion}>
               <div className={fullArticleStyle.discussionItem}>
                 <big>
-                  <b>Discussion (0)</b>
+                  <b>Discussion ({comments ? comments.length : null})</b>
                 </big>
               </div>
             </Row>

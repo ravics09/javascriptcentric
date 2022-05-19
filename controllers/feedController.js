@@ -59,15 +59,8 @@ async function getReadingPost(request, response) {
 }
 
 async function getPosts(request, response) {
-  Feed.find({})
-    .select([
-      "postedBy",
-      "postTitle",
-      "likeCount",
-      "commentCount",
-      "createdAt",
-      "comments",
-    ])
+  Feed.find({}, { new: true })
+    .select(["postedBy", "postTitle", "createdAt", "comments", "likedBy"])
     .populate("postedBy", ["fullName", "email", "profilePhoto"])
     .exec((error, posts) => {
       if (error) {
@@ -75,7 +68,6 @@ async function getPosts(request, response) {
       } else {
         response.status(200).json({
           posts: posts,
-          statusCode: 200,
         });
       }
     });
@@ -158,6 +150,57 @@ async function deletePost(request, response) {
     });
 }
 
+async function addToLikedBy(request, response) {
+  const { id } = request.params;
+  const { userId } = request.body;
+  const newItem = {
+    userId: userId,
+  };
+
+  const updatedLikedBy = {
+    $push: { likedBy: newItem },
+  };
+
+  Feed.findByIdAndUpdate({ _id: id }, updatedLikedBy, { new: true })
+    .then((res) => {
+      response.status(200).json({
+        message: "Successfully liked this item!",
+        updatedLikedBy: res.likedBy,
+      });
+    })
+    .catch((error) => {
+      response.status(401).json({
+        error: error,
+      });
+    });
+}
+
+async function removeFromLikedBy(request, response) {
+  const { id } = request.params;
+  const { userId } = request.body;
+
+  Feed.findOneAndUpdate(
+    { _id: id },
+    {
+      $pull: {
+        likedBy: { userId: userId },
+      },
+    },
+    { new: true }
+  )
+    .then((res) => {
+      response.status(200).json({
+        message: "Successfully Un liked this item!",
+        updatedLikedBy: res.likedBy,
+      });
+    })
+    .catch((error) => {
+      response.status(401).json({
+        error: error,
+      });
+    });
+}
+
 module.exports = {
   createPost,
   getPost,
@@ -167,4 +210,6 @@ module.exports = {
   getUserPosts,
   deletePost,
   getReadingPost,
+  addToLikedBy,
+  removeFromLikedBy,
 };

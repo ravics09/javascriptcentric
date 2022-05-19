@@ -4,6 +4,8 @@ const crypto = require("crypto");
 const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
 const { OAuth2Client } = require("google-auth-library");
+const ValidateSignupInput=require("../util/validator/validateSignupInput");
+const ValidateSigninInput=require("../util/validator/validateSignInput");
 
 const BaseURL = "http://localhost:3000";
 
@@ -11,7 +13,10 @@ const User = require("./../models/userModel");
 const Token = require("./../models/tokenModel");
 
 async function signUpUser(request, response) {
-  console.log("User details for sign up", request.body);
+  const { errors, isValid } = ValidateSignupInput(request.body);
+  if (!isValid) {
+    return res.status(400).json(errors);
+  }
   const { email, fullName, password } = request.body;
   const user = await User.findOne({ email: email });
 
@@ -38,9 +43,13 @@ async function signUpUser(request, response) {
 }
 
 async function signInUser(request, response) {
+  const { errors, isValid } = ValidateSigninInput(request.body);
+  if (!isValid) {
+    return res.status(400).json(errors);
+  }
+
   const { email, password } = request.body;
   const user = await User.findOne({ email: email });
-
   if (!user) {
     response.status(404).json({
       message: "User Not Exist.",
@@ -58,7 +67,7 @@ async function signInUser(request, response) {
       fullName: user.fullName,
       email: user.email,
       profilePhoto: profilePic,
-      readingList: readIdList,
+      readingList: readIdList
     };
     bcrypt.compare(password, user.hash, (err, compareRes) => {
       if (err) {

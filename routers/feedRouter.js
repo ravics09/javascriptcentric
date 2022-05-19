@@ -10,7 +10,8 @@ mainRoutes.put('/createnewcomment/:id',createPostComment);
 mainRoutes.get('/getuserposts/:id', getUserPosts);
 mainRoutes.delete('/deletepost/:id', deletePost);
 mainRoutes.get('/getreadingpost/:id', getReadingPost)
-
+mainRoutes.put('/addtolikedby/:id', addToLikedBy);
+mainRoutes.put('/removefromlikedby/:id', removeFromLikedBy);
 
 function createPost(request, response, next) {
     feedController.createPost(request, response, next);
@@ -42,6 +43,14 @@ function getUserPosts(request, response, next) {
 
 function deletePost(request, response, next) {
     feedController.deletePost(request, response, next);
+};
+
+function addToLikedBy(request, response) {
+    feedController.addToLikedBy(request, response);
+};
+
+function removeFromLikedBy(request, response) {
+    feedController.removeFromLikedBy(request, response);
 };
 
 

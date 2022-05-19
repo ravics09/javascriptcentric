@@ -36,14 +36,11 @@ const feedSchema = new Schema(
         updated_at: { type: Date, default: Date.now },
       },
     ],
-    likeCount: {
-      type: Number,
-      default: 0,
-    },
-    commentCount: {
-      type: Number,
-      default: 0,
-    },
+    likedBy: [
+      {
+        userId: String,
+      },
+    ]
   },
   { timestamps: true }
 );

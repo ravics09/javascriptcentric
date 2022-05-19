@@ -3,7 +3,6 @@ const moment = require("moment");
 const { createClient } = require("redis");
 const User = require("./../models/userModel");
 
-// create and connect redis client to local instance.
 const client = createClient();
 client.connect();
 
@@ -27,6 +26,9 @@ module.exports = {
   addToReadingList,
   removeFromReadingList,
   fetchReadingList,
+  addTolikedPost,
+  removeFromlikedPost,
+  fetchlikedPost
 };
 
 async function getProfile(request, response) {
@@ -194,3 +196,64 @@ async function fetchReadingList(request, response) {
     response.status(404).send("Somthing is wrong.");
   }
 }
+
+async function addTolikedPost(request, response) {
+  const { id } = request.params;
+  const { postId } = request.body;
+
+  const user = await User.findById(id);
+  if (user) {
+    const newItem = {
+      postId: postId,
+    };
+
+    const updateReadingList = {
+      $push: { readingList: newItem },
+    };
+
+    User.findByIdAndUpdate({ _id: id }, updateReadingList, { new: true }).then(
+      (res) => {
+        let readIdList = res.readingList.map((item) => item.postId);
+        response.status(200).json({
+          message: "New Article Added To Reading List!",
+          updatedReadingList: readIdList,
+        });
+      }
+    );
+  }
+}
+
+async function removeFromlikedPost(request, response) {
+  const { id } = request.params;
+  const { postId } = request.body;
+  User.findOneAndUpdate(
+    { _id: id },
+    {
+      $pull: {
+        readingList: { postId: postId },
+      },
+    },
+    { new: true }
+  ).then((res) => {
+    let readIdList = res.readingList.map((item) => item.postId);
+    response.status(200).json({
+      message: "Selected Article Removed From Reading List!",
+      updatedReadingList: readIdList,
+    });
+  });
+}
+
+async function fetchlikedPost(request, response) {
+  const { id } = request.params;
+  const user = await User.findById(id);
+  if (user) {
+    let readIdList = user.readingList.map((item) => item.postId);
+    response.status(200).json({
+      readingList: user.readingList,
+      idList: readIdList,
+    });
+  } else {
+    response.status(404).send("Somthing is wrong.");
+  }
+}
+

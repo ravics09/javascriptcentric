@@ -1,4 +1,4 @@
-const { Schema, model} = require("mongoose");
+const { Schema, model } = require("mongoose");
 const userSchema = new Schema(
   {
     fullName: {
@@ -10,7 +10,7 @@ const userSchema = new Schema(
       unique: true,
       index: true,
       required: true,
-      trim: true
+      trim: true,
     },
     mobile: {
       type: Number,
@@ -43,8 +43,13 @@ const userSchema = new Schema(
     },
     readingList: [
       {
-        postId: String
-      }
+        postId: String,
+      },
+    ],
+    likedPost: [
+      {
+        postId: String,
+      },
     ],
     hash: {
       type: String,

@@ -1,8 +1,6 @@
 import axios from "axios";
 import AuthHeader from "./authHeader";
 
-// const API_URL = "http://localhost:9090/feed";
-
 const createPost = async (payload) => {
   const url = "http://localhost:9090/feed/createpost";
   return axios
@@ -169,6 +167,69 @@ const deletePost = async (id) => {
     });
 };
 
+const addToLikedBy = async (id, userId) => {
+  const url = `http://localhost:9090/feed/addtolikedby/${id}`;
+  const payload = {
+    userId,
+  };
+
+  return axios.put(url, payload).then(
+    (response) => {
+      console.log("after added to liked by list ==", response);
+      if (response.status === 200) {
+        localStorage.setItem(
+          "likedByList",
+          JSON.stringify(response.data.updatedLikedBy)
+        );
+
+        return {
+          status: "success",
+          message: "Successfully Added to liked List.",
+          updatedLikedBy: response.data.updatedLikedBy,
+        };
+      }
+    },
+    (error) => {
+      if (error.response) {
+        return { status: "failed", message: error.response.data };
+      } else {
+        return { status: "failed", message: "Server Not Responding" };
+      }
+    }
+  );
+};
+
+const removeFromLikedBy = async(id, userId) => {
+  console.log("removeFromlikedby request with id " + id + " and userId " + userId);
+  const url = `http://localhost:9090/feed/removefromlikedby/${id}`;
+  const payload = {
+    userId,
+  };
+  return axios.put(url, payload).then(
+    (response) => {
+      if (response.status === 200) {
+        localStorage.setItem(
+          "likedByList",
+          JSON.stringify(response.data.updatedLikedBy)
+        );
+
+        return {
+          status: "success",
+          message: "Successfully Removed From liked List.",
+          updatedLikedBy: response.data.updatedLikedBy,
+        };
+      }
+    },
+    (error) => {
+      if (error.response) {
+        return { status: "failed", message: error.response.data };
+      } else {
+        return { status: "failed", message: "Server Not Responding" };
+      }
+    }
+  );
+}
+
 const feedService = {
   createPost,
   getAllPosts,
@@ -178,6 +239,8 @@ const feedService = {
   editPost,
   deletePost,
   getReadingPost,
+  addToLikedBy,
+  removeFromLikedBy
 };
 
 export default feedService;
