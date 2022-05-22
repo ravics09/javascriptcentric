@@ -92,7 +92,6 @@ const addComment = (postId, userId, comment) => {
 
   return axios.put(url, payload).then(
     (response) => {
-      console.log("after comment ==", response.data);
       return {
         status: "success",
         message: "Your Comment Added Successfully.",
@@ -175,7 +174,6 @@ const addToLikedBy = async (id, userId) => {
 
   return axios.put(url, payload).then(
     (response) => {
-      console.log("after added to liked by list ==", response);
       if (response.status === 200) {
         localStorage.setItem(
           "likedByList",
@@ -200,7 +198,6 @@ const addToLikedBy = async (id, userId) => {
 };
 
 const removeFromLikedBy = async(id, userId) => {
-  console.log("removeFromlikedby request with id " + id + " and userId " + userId);
   const url = `http://localhost:9090/feed/removefromlikedby/${id}`;
   const payload = {
     userId,

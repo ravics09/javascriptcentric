@@ -172,15 +172,7 @@ const UserAccount = () => {
       });
     }
   };
-
-  // if (profilePhoto) {
-  //   var imgstr = profilePhoto;
-  //   imgstr = imgstr.replace("public", "");
-  //   var profilePic = "http://localhost:9090" + imgstr;
-  // } else {
-  //   profilePic = PLACEHOLDER_IMG;
-  // }
-
+  
   return (
     <Fragment>
       <Navbar />

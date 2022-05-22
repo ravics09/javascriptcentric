@@ -120,14 +120,13 @@ const Home = () => {
     const hourAgo = moment(item.createdAt).startOf("hour").fromNow();
     const minAgo = moment(item.createdAt).startOf("minute").fromNow();
     let readingStatus = false;
+    let profilePic;
     if (readingList.length > 0 && readingList.includes(item._id)) {
       readingStatus = true;
     }
 
     if (item.postedBy.profilePhoto) {
-      var imgstr = item.postedBy.profilePhoto;
-      imgstr = imgstr.replace("public", "");
-      var profilePic = "http://localhost:9090" + imgstr;
+      profilePic = item.postedBy.profilePhoto;
     } else {
       profilePic = PLACEHOLDER_IMG;
     }

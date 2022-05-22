@@ -57,6 +57,7 @@ const FullArticle = () => {
   const { loggedInUser } = useSelector((state) => state.AuthReducer);
   const { readingList } = useSelector((state) => state.UserReducer);
   const { likedByList } = useSelector((state) => state.FeedReducer);
+  let profilePic;
 
   const [dimensions, setDimensions] = useState({
     height: window.innerHeight,
@@ -285,9 +286,7 @@ const FullArticle = () => {
   const postDate = moment(postData.createdAt).format("MMM Do YYYY");
 
   if (profilePhoto) {
-    var imgstr = profilePhoto;
-    imgstr = imgstr.replace("public", "");
-    var profilePic = "http://localhost:9090" + imgstr;
+    profilePic = profilePhoto;
   } else {
     profilePic = PLACEHOLDER_IMG;
   }

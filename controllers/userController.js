@@ -1,7 +1,17 @@
 require("dotenv").config();
 const moment = require("moment");
 const { createClient } = require("redis");
+const cloudinary = require("cloudinary").v2;
 const User = require("./../models/userModel");
+const { CloudinaryStorage } = require("multer-storage-cloudinary");
+const { CLOUDINARY_HOST, CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET } =
+  process.env;
+
+cloudinary.config({
+  cloud_name: CLOUDINARY_HOST,
+  api_key: CLOUDINARY_API_KEY,
+  api_secret: CLOUDINARY_API_SECRET,
+});
 
 const client = createClient();
 client.connect();
@@ -28,7 +38,7 @@ module.exports = {
   fetchReadingList,
   addTolikedPost,
   removeFromlikedPost,
-  fetchlikedPost
+  fetchlikedPost,
 };
 
 async function getProfile(request, response) {
@@ -42,10 +52,6 @@ async function getProfile(request, response) {
   } else {
     const user = await User.findById(id);
     if (user) {
-      let profilePic = user.profilePhoto
-        ? "http://localhost:9090" + user.profilePhoto.replace("public", "")
-        : null;
-
       const customResponse = {
         _id: user._id,
         fullName: user.fullName,
@@ -57,7 +63,7 @@ async function getProfile(request, response) {
         skills: user.skills,
         work: user.work,
         education: user.education,
-        profilePhoto: profilePic,
+        profilePhoto: user.profilePhoto,
         createdAt: moment(user.createdAt).format("YYYY-MM-DD"),
         updatedAt: moment(user.updatedAt).format("YYYY-MM-DD"),
       };
@@ -109,31 +115,40 @@ async function editProfile(request, response) {
 
 async function UploadProfileImage(request, response) {
   const { id } = request.params;
-  var profilePic = request.file.path;
+  let profilePic = request.file.path;
+
   User.findById(id, (err, data) => {
-    data.profilePhoto = profilePic ? profilePic : data.profilePhoto;
-    data
-      .save()
-      .then((dbUser) => {
-        let profilePic = dbUser.profilePhoto
-          ? "http://localhost:9090" + dbUser.profilePhoto.replace("public", "")
-          : null;
+    cloudinary.uploader.upload(
+      profilePic,
+      { folder: "JavaScriptCentric/profilePhoto" },
+      (err, result) => {
+        if (err) {
+          response.status(500).json({
+            message: err.message,
+          });
+        }
 
-        const customResponse = {
-          _id: dbUser._id,
-          fullName: dbUser.fullName,
-          email: dbUser.email,
-          profilePhoto: profilePic,
-        };
+        data.profilePhoto = result.secure_url;
+        data
+          .save()
+          .then((dbUser) => {
+            const customResponse = {
+              _id: dbUser._id,
+              fullName: dbUser.fullName,
+              email: dbUser.email,
+              profilePhoto: dbUser.profilePhoto,
+            };
 
-        response.status(200).json({
-          user: customResponse,
-          message: "Your photo uploaded successfully",
-        });
-      })
-      .catch((err) => {
-        response.json(err);
-      });
+            response.status(200).json({
+              user: customResponse,
+              message: "Your photo uploaded successfully",
+            });
+          })
+          .catch((err) => {
+            response.json(err);
+          });
+      }
+    );
   });
 }
 
@@ -256,4 +271,3 @@ async function fetchlikedPost(request, response) {
     response.status(404).send("Somthing is wrong.");
   }
 }
-

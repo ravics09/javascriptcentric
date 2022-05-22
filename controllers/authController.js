@@ -56,17 +56,13 @@ async function signInUser(request, response) {
       status: 404,
     });
   } else {
-    let profilePic = user.profilePhoto
-      ? "http://localhost:9090" + user.profilePhoto.replace("public", "")
-      : null;
-
     let readIdList = user.readingList.map((item) => item.postId);
 
     const customResponse = {
       _id: user._id,
       fullName: user.fullName,
       email: user.email,
-      profilePhoto: profilePic,
+      profilePhoto: user.profilePhoto,
       readingList: readIdList
     };
     bcrypt.compare(password, user.hash, (err, compareRes) => {
@@ -150,7 +146,6 @@ async function googleSignInUser(request, response) {
 
 async function forgetPassword(request, response) {
   const { email } = request.body;
-
   if (email === "") {
     response.status(400).send("Email Address Required..");
   }
@@ -234,7 +229,6 @@ async function resetPassword(request, response) {
 
 async function validateResetLink(request, response) {
   const { id, token } = request.params;
-
   const user = await User.findById(id);
   if (user) {
     const tok = await Token.findOne({

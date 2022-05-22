@@ -2,9 +2,6 @@ import axios from "axios";
 import AuthHeader from "./authHeader";
 import FeedService from "./feedService";
 
-// const API_URL = "http://localhost:9090/user";
-// const OTHER_API_URL = "http://localhost:9090/other";
-
 const editUserProfile = async (id, formValues) => {
   const { fullName, email, mobile, location, bio, work, education, skills } =
     formValues;

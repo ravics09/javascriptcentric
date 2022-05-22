@@ -16,9 +16,9 @@ const PORT = 9090;
 
 // Use Middlewares in our app.
 app.use(cors());
+app.use(helmet());
 app.use(compression());
 app.use(morgan("tiny"));
-app.use(helmet.hidePoweredBy());
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.json({ limit: "30mb", extended: true }));
 app.use(express.urlencoded({ limit: "30mb", extended: true }));
