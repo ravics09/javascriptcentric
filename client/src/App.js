@@ -1,3 +1,5 @@
+import "core-js/stable";
+import "@babel/polyfill";
 import React, { useState, useEffect } from "react";
 import { BrowserRouter } from "react-router-dom";
 import { Provider as StoreProvider } from "react-redux";

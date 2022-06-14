@@ -1,5 +1,18 @@
 import axios from "axios";
 
+let api = axios.create({
+  baseUrl: "http://http://localhost:9090",
+  timeout: 1000,
+  headers: { "X-Custom-Header": "footer" },
+});
+
+api.interceptors.response.use(
+  (res) => res,
+  (err) => {
+    throw err;
+  }
+);
+
 // const API_URL = "http://localhost:9090/auth";
 
 const signIn = async (payload) => {
@@ -8,8 +21,14 @@ const signIn = async (payload) => {
     .then((response) => {
       if (response.status === 200) {
         localStorage.setItem("User", JSON.stringify(response.data.user));
-        localStorage.setItem("readingList", JSON.stringify(response.data.user.readingList));
-        localStorage.setItem("AccessToken", JSON.stringify(response.data.accessToken));
+        localStorage.setItem(
+          "readingList",
+          JSON.stringify(response.data.user.readingList)
+        );
+        localStorage.setItem(
+          "AccessToken",
+          JSON.stringify(response.data.accessToken)
+        );
         return {
           status: "success",
           message: "You are redirecting to home page",
@@ -20,7 +39,9 @@ const signIn = async (payload) => {
     .catch((error) => {
       return {
         status: "failed",
-        message: error ? "Server is not responding" : error.response.data.message,
+        message: error
+          ? "Server is not responding"
+          : error.response.data.message,
       };
     });
 };

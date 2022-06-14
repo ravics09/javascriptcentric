@@ -18,7 +18,7 @@ import {
 import { signout } from "../actions/authAction";
 import PLACEHOLDER_IMG from "../assets/images/h1.png";
 
-const NavBar = () => {
+const NavBar = (props) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [userName, setUserName] = useState("");
@@ -48,22 +48,15 @@ const NavBar = () => {
     });
   };
 
-  const handleSearchText = async (e) => {
+  const handleSearchText = (e) => {
     setSearchText(e.target.value);
+    props.onSearch(e.target.value);
   };
 
   const handleSearch = async () => {
     alert("You searched for" + searchText);
     // setSearchText("")
   };
-
-  // if (profilePhoto) {
-  //   var imgstr = profilePhoto;
-  //   imgstr = imgstr.replace("public", "");
-  //   var profilePic = "http://localhost:9090" + imgstr;
-  // } else {
-  //   profilePic = PLACEHOLDER_IMG;
-  // }
 
   return (
     <Navbar expand="md" bg="dark" fixed="top" className={NavBarStyle.container}>
@@ -90,40 +83,40 @@ const NavBar = () => {
             <Nav.Link
               exact
               as={NavLink}
-              to="/jobs"
+              to="/javascript"
               className={NavBarStyle.navLink}
               activeClassName={NavBarStyle.activeNavLink}
             >
-              Jobs
+              JavaScript
             </Nav.Link>
             <Nav.Link
               exact
               as={NavLink}
-              to="/contactus"
+              to="/nodejs"
               className={NavBarStyle.navLink}
               activeClassName={NavBarStyle.activeNavLink}
             >
-              Contact
+              NodeJS
             </Nav.Link>
           </Nav>
-          <Form className="d-flex">
-            <Container>
-              <InputGroup>
-                <FormControl
-                  type="search"
-                  placeholder="Search here"
-                  value={searchText}
-                  aria-label="Search"
-                  onChange={(e) => {
-                    handleSearchText(e);
-                  }}
-                />
-                <Button variant="dark" onClick={() => handleSearch()}>
-                  Search
-                </Button>
-              </InputGroup>
-            </Container>
-          </Form>
+          {props.showSearchBar ? (
+            <Form className="d-flex">
+              <Container>
+                <InputGroup>
+                  <FormControl
+                    type="text"
+                    placeholder="Type here"
+                    value={searchText}
+                    aria-label="Search"
+                    onChange={(e)=> handleSearchText(e)}
+                  />
+                  <Button variant="dark" onClick={() => handleSearch()}>
+                    Search
+                  </Button>
+                </InputGroup>
+              </Container>
+            </Form>
+          ) : null}
           <NavDropdown
             title={
               <Image
@@ -138,7 +131,7 @@ const NavBar = () => {
             eventKey={3}
           >
             <NavDropdown.Item exact as={NavLink} to="/account" eventKey={3.3}>
-              @{userName?userName:null}
+              @{userName ? userName : null}
             </NavDropdown.Item>
             <NavDropdown.Divider />
             <NavDropdown.Item

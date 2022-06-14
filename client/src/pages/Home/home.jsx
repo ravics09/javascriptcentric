@@ -180,9 +180,23 @@ const Home = () => {
     );
   };
 
+  const searchTopic = (name) => console.log("searched text:", name);
+
+  const debounce = (func, timeout = 500) => {
+    let timer;
+    return (...args) => {
+      clearTimeout(timer);
+      timer = setTimeout(() => {
+        func.apply(this, args);
+      }, timeout);
+    };
+  };
+
+  const onSearch = debounce((e) => searchTopic(e));
+
   return (
     <Fragment>
-      <Navbar />
+      <Navbar showSearchBar={true} onSearch={onSearch} />
       <Container
         className={homeStyle.container}
         style={{ minHeight: dimensions.height }}

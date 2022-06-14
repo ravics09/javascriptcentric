@@ -175,7 +175,7 @@ const UserAccount = () => {
   
   return (
     <Fragment>
-      <Navbar />
+      <Navbar  showSearchBar={false}/>
       <Container
         className={userAccountStyle.container}
         style={{ minHeight: dimensions.height }}

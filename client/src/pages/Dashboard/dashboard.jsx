@@ -114,7 +114,7 @@ const Dashboard = () => {
 
   return (
     <Fragment>
-      <Navbar />
+      <Navbar  showSearchBar={false}/>
       <Container
         className={dashboardStyle.container}
         style={{ minHeight: dimensions.height }}

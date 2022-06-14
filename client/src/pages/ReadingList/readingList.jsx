@@ -130,7 +130,7 @@ const ReadingList = () => {
 
   return (
     <Fragment>
-      <Navbar />
+      <Navbar  showSearchBar={false}/>
       <Container
         className={readingListStyle.container}
         style={{ minHeight: dimensions.height }}

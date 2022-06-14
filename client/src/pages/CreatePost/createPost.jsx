@@ -97,7 +97,7 @@ const CreatePost = () => {
 
   return (
     <Fragment>
-      <Navbar />
+      <Navbar showSearchBar={false}/>
       <Container
         className={createPostStyle.container}
         style={{ minHeight: dimensions.height }}

@@ -292,7 +292,7 @@ const FullArticle = () => {
   }
   return (
     <Fragment>
-      <Navbar />
+      <Navbar showSearchBar={false}/>
       <Container
         className={fullArticleStyle.container}
         style={{ minHeight: dimensions.height }}

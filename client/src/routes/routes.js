@@ -13,6 +13,7 @@ import {
   Dashboard,
   ReadingList,
   ForgetPassword,
+  JavaScript,
   InterviewQuestions,
   Main,
   CodingChallenge,
@@ -25,7 +26,6 @@ import {
   QuizStatusBoard,
   QuizTopic,
   OnlineQuiz,
-  JavaScript,
   ReactJS,
   MongoDB,
   NodeJS,
@@ -108,6 +108,24 @@ const AppRoutes = () => {
         path="/readinglist"
       />
       <Route exact element={<ForgetPassword />} path="/forgetpassword" />
+      <Route
+        exact
+        element={
+          <IsAuth>
+            <JavaScript />
+          </IsAuth>
+        }
+        path="/javascript"
+      />
+      <Route
+        exact
+        element={
+          <IsAuth>
+           <NodeJS/>
+          </IsAuth>
+        }
+        path="/nodejs"
+      />
       {/* <Route exact element={<Main/>} path="/main" />
       <Route exact element={<InterviewQuestions/>} path="/interviewquestions" />
       <Route exact element={<CodingChallenge/>} path="/codingchallenge" />
