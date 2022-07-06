@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
-import { Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
 import {
   Home,
@@ -40,93 +40,94 @@ const AppRoutes = () => {
   };
 
   return (
-    <Routes>
-      <Route exact element={<SignIn />} path="/" />
-      <Route exact element={<SignIn />} path="/signin" />
-      <Route exact element={<SignUp />} path="/signup" />
-      <Route
-        exact
-        element={
-          <IsAuth>
-            <Home />
-          </IsAuth>
-        }
-        path="/home"
-      />
-      <Route
-        exact
-        element={
-          <IsAuth>
-            <CreatePost />
-          </IsAuth>
-        }
-        path="/createpost"
-      />
-      <Route
-        exact
-        element={
-          <IsAuth>
-            <FullArticle />
-          </IsAuth>
-        }
-        path="/fullarticle/:id"
-      />
-      <Route
-        exact
-        element={
-          <IsAuth>
-            <EditPost />
-          </IsAuth>
-        }
-        path="/:id/editpost"
-      />
-      <Route
-        exact
-        element={
-          <IsAuth>
-            <Account />
-          </IsAuth>
-        }
-        path="/account"
-      />
-      <Route
-        exact
-        element={
-          <IsAuth>
-            <Dashboard />
-          </IsAuth>
-        }
-        path="/dashboard"
-      />
-      <Route
-        exact
-        element={
-          <IsAuth>
-            <ReadingList />
-          </IsAuth>
-        }
-        path="/readinglist"
-      />
-      <Route exact element={<ForgetPassword />} path="/forgetpassword" />
-      <Route
-        exact
-        element={
-          <IsAuth>
-            <JavaScript />
-          </IsAuth>
-        }
-        path="/javascript"
-      />
-      <Route
-        exact
-        element={
-          <IsAuth>
-           <NodeJS/>
-          </IsAuth>
-        }
-        path="/nodejs"
-      />
-      {/* <Route exact element={<Main/>} path="/main" />
+    <BrowserRouter>
+      <Routes>
+        <Route exact element={<SignIn />} path="/" />
+        <Route exact element={<SignIn />} path="/signin" />
+        <Route exact element={<SignUp />} path="/signup" />
+        <Route
+          exact
+          element={
+            <IsAuth>
+              <Home />
+            </IsAuth>
+          }
+          path="/home"
+        />
+        <Route
+          exact
+          element={
+            <IsAuth>
+              <CreatePost />
+            </IsAuth>
+          }
+          path="/createpost"
+        />
+        <Route
+          exact
+          element={
+            <IsAuth>
+              <FullArticle />
+            </IsAuth>
+          }
+          path="/fullarticle/:id"
+        />
+        <Route
+          exact
+          element={
+            <IsAuth>
+              <EditPost />
+            </IsAuth>
+          }
+          path="/:id/editpost"
+        />
+        <Route
+          exact
+          element={
+            <IsAuth>
+              <Account />
+            </IsAuth>
+          }
+          path="/account"
+        />
+        <Route
+          exact
+          element={
+            <IsAuth>
+              <Dashboard />
+            </IsAuth>
+          }
+          path="/dashboard"
+        />
+        <Route
+          exact
+          element={
+            <IsAuth>
+              <ReadingList />
+            </IsAuth>
+          }
+          path="/readinglist"
+        />
+        <Route exact element={<ForgetPassword />} path="/forgetpassword" />
+        <Route
+          exact
+          element={
+            <IsAuth>
+              <JavaScript />
+            </IsAuth>
+          }
+          path="/javascript"
+        />
+        <Route
+          exact
+          element={
+            <IsAuth>
+              <NodeJS />
+            </IsAuth>
+          }
+          path="/nodejs"
+        />
+        {/* <Route exact element={<Main/>} path="/main" />
       <Route exact element={<InterviewQuestions/>} path="/interviewquestions" />
       <Route exact element={<CodingChallenge/>} path="/codingchallenge" />
       <Route exact element={<JavaScriptPrograms/>} path="/programs" />
@@ -148,7 +149,8 @@ const AppRoutes = () => {
       <Route exact element={<ReactNative/>} path="/topic/reactnative" />
       <Route exact element={<MongoDB/>} path="/topic/mongodb" />
       <Route exact element={<NodeJS/>} path="/topic/nodejs" /> */}
-    </Routes>
+      </Routes>
+    </BrowserRouter>
   );
 };
 

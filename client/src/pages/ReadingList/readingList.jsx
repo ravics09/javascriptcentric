@@ -39,14 +39,6 @@ const ReadingList = () => {
       const result = await UserService.fetchReadingList(idList);
       if (result.status === "success") {
         setReadingListItems(result.readingListItems);
-      } else {
-        swal({
-          title: "Error!",
-          text: `${result.message}`,
-          icon: "warning",
-          timer: 2000,
-          button: false,
-        });
       }
     }
   }, []);

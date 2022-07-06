@@ -28,13 +28,28 @@ const NavBar = (props) => {
   const { isLoggedIn, loggedInUser } = useSelector(
     (state) => state.AuthReducer
   );
+  const [dimensions, setDimensions] = useState({
+    height: window.innerHeight,
+    width: window.innerWidth,
+  });
 
   useEffect(() => {
+    window.addEventListener("resize", handleResize);
     if (isLoggedIn) {
       setUserName(loggedInUser.fullName);
       setProfilePhoto(loggedInUser.profilePhoto);
     }
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
   }, [isLoggedIn]);
+
+  const handleResize = () => {
+    setDimensions({
+      height: window.innerHeight,
+      width: window.innerWidth,
+    });
+  };
 
   const handleSelect = (key) => {
     setActiveKey(Math.trunc(key));
@@ -100,7 +115,7 @@ const NavBar = (props) => {
             </Nav.Link>
           </Nav>
           {props.showSearchBar ? (
-            <Form className="d-flex">
+            <Form className="d-flex" >
               <Container>
                 <InputGroup>
                   <FormControl
@@ -108,12 +123,25 @@ const NavBar = (props) => {
                     placeholder="Type here"
                     value={searchText}
                     aria-label="Search"
-                    onChange={(e)=> handleSearchText(e)}
+                    onChange={(e) => handleSearchText(e)}
                   />
                   <Button variant="dark" onClick={() => handleSearch()}>
                     Search
                   </Button>
                 </InputGroup>
+                <Container
+                  style={{
+                    position: "fixed",
+                    backgroundColor: "white",
+                    width:  dimensions.width < 520 ? "375px" : "202px",
+                  }}
+                >
+                  {props.searchData
+                    ? props.searchData.map((item) => (
+                        <p style={{ color: "black", paddingTop: "10px",border: "1px solid white" }}>{item}</p>
+                      ))
+                    : null}
+                </Container>
               </Container>
             </Form>
           ) : null}

@@ -1,24 +1,21 @@
 .container {
   padding-top: 100px;
 }
-.firstColumnFirstRow {
-  background-color: #abcff7;
+.leftColumn{
   margin-bottom: 10px;
   border-radius: 5px;
   border-width: 1px;
 }
-.firstColumnSecondRow {
-  background-color: #f7dc6f;
-  margin-bottom: 10px;
-  margin-right: 1px;
-  border-radius: 5px;
-  border-width: 10px;
-}
-.secondColumn {
+.middleColumn {
   background-color: white;
   margin-bottom: 10px;
   padding-top: 10px;
   box-shadow: 2px 1px 2px black !important;
+}
+.rightColumn {
+  margin-bottom: 10px;
+  border-radius: 5px;
+  border-width: 1px;
 }
 .cardHeader {
   display: flex;
@@ -30,6 +27,9 @@
 }
 .cardName {
   padding-left: 10px;
+  display: flex;
+  flex-direction: column;
+  /* text-align: center; */
 }
 .cardSubtitle {
   padding-top: 10px;
@@ -43,9 +43,6 @@
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-}
-.thirdColumn {
-  margin-bottom: 10px;
 }
 .rightCardSection {
   display: flex;

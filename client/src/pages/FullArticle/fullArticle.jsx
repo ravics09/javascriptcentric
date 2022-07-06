@@ -1,6 +1,6 @@
 import React, { useState, useEffect, Fragment } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { useNavigate, useParams, NavLink } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import * as yup from "yup";
 import swal from "sweetalert";
 import { Formik } from "formik";
@@ -24,7 +24,6 @@ import {
   removefromreadinglist,
 } from "../../actions/userAction";
 import { addtolikedby, removefromlikedby } from "./../../actions/feedAction";
-import LEADER_IMG from "../../assets/images/leader.jpeg";
 import PLACEHOLDER_IMG from "../../assets/images/h1.png";
 import COVERIMAGE from "../../assets/images/coverImage.jpg";
 
@@ -84,11 +83,22 @@ const FullArticle = () => {
   };
 
   useEffect(() => {
+    window.addEventListener("resize", handleResize);
     if (loggedInUser) {
       setUserId(loggedInUser._id);
       fetchData();
     }
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
   }, []);
+
+  const handleResize = () => {
+    setDimensions({
+      height: window.innerHeight,
+      width: window.innerWidth,
+    });
+  };
 
   const ColoredLine = ({ color }) => (
     <hr
@@ -292,13 +302,17 @@ const FullArticle = () => {
   }
   return (
     <Fragment>
-      <Navbar showSearchBar={false}/>
+      <Navbar showSearchBar={false} />
       <Container
         className={fullArticleStyle.container}
         style={{ minHeight: dimensions.height }}
       >
         <Row>
-          <Col md={1} className={fullArticleStyle.firstColumn}>
+          <Col
+            md={1}
+            className={fullArticleStyle.firstColumn}
+            style={{ display: dimensions.width < 520 ? "none" : null }}
+          >
             <Row className={fullArticleStyle.firstColumnItem}>
               <FaHeart color="red" size={24} />
               <p>{postData.likedBy ? postData.likedBy.length : null} Likes</p>
@@ -334,7 +348,7 @@ const FullArticle = () => {
                     <p>Posted on {postDate}</p>
                   </div>
                 </div>
-                <div>
+                <div style={{ display: authorDetails._id ? null : "none" }}>
                   {authorDetails._id === userId ? (
                     <Button
                       block
@@ -470,7 +484,7 @@ const FullArticle = () => {
                         type="submit"
                         variant={isSubmitting ? "success" : "primary"}
                       >
-                        {isSubmitting ? "Waiting to publish" : "Publish"}
+                        {isSubmitting ? "Wait" : "Add"}
                       </Button>
                       &nbsp;&nbsp;&nbsp;
                       <Button
@@ -493,7 +507,11 @@ const FullArticle = () => {
                 ))
               : null}
           </Col>
-          <Col md={2} className={fullArticleStyle.thirdColumn}>
+          <Col
+            md={2}
+            className={fullArticleStyle.thirdColumn}
+            style={{ display: dimensions.width < 520 ? "none" : null }}
+          >
             <Card>
               <Card.Img variant="top" src={profilePic} />
               <Card.Body>

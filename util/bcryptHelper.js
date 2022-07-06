@@ -1,22 +1,21 @@
 const bcrypt = require("bcryptjs");
 
-const hashed = (input) => {
-  bcrypt.hash(input, 12, (err, hashedData) => {
-    if (err) {
-      return err;
-    }
-    return hashedData;
-  });
+const hashed = async (input) => {
+  try {
+    let hashed = await bcrypt.hash(input, 12);
+    return hashed;
+  } catch (err) {
+    return err;
+  }
 };
 
-const compare = (input, hash) => {
-  bcrypt.compare(input, hash, (err, res) => {
-    if (err) {
-      console.error("error ",err);
-      return "err";
-    }
-    return res;
-  });
+const compare = async (input, hash) => {
+  try {
+    let result = await bcrypt.compare(input, hash);
+    return result;
+  } catch (err) {
+    return err;
+  }
 };
 
 module.exports = {

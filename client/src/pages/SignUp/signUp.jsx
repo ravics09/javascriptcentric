@@ -67,6 +67,7 @@ const SignUp = () => {
         fullName: fullName,
         email: email,
         password: password,
+        confirmPassword: confirmPassword
       };
 
       const result = await AuthService.signUp(user);

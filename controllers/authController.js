@@ -4,102 +4,104 @@ const crypto = require("crypto");
 const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
 const { OAuth2Client } = require("google-auth-library");
-const ValidateSignupInput=require("../util/validator/validateSignupInput");
-const ValidateSigninInput=require("../util/validator/validateSignInput");
 
 const BaseURL = "http://localhost:3000";
 
 const User = require("./../models/userModel");
 const Token = require("./../models/tokenModel");
+const BcryptHelper = require("./../util/bcryptHelper");
 
-async function signUpUser(request, response) {
-  const { errors, isValid } = ValidateSignupInput(request.body);
-  if (!isValid) {
-    return res.status(400).json(errors);
-  }
+async function signUpUser(request, response, next) {
   const { email, fullName, password } = request.body;
-  const user = await User.findOne({ email: email });
+  const isUserExist = await User.findOne({ email: email });
+  const err = new Error();
+  if (isUserExist) {
+    err.status = "UserConflict";
+    return next(err);
+  }
 
-  if (!user) {
-    if (email && password) {
-      bcrypt.hash(password, 12, async (err, passwordHash) => {
-        if (err) {
-          response.status(500).send("Couldn't hash the password");
-        } else if (passwordHash) {
-          return User.create({
-            email: email,
-            fullName: fullName,
-            hash: passwordHash,
-          }).then(() => {
-            response.status(200).json({
-              message: "You have signed up successfully. Please sign in!!",
-            });
-          });
-        }
+  let newUser = new User();
+  let passwordHash = await BcryptHelper.hashed(password);
+  newUser.fullName = fullName;
+  newUser.email = email;
+  newUser.hash = passwordHash;
+
+  newUser.save((err, data) => {
+    if (err) {
+      err.status = "InternalServerError";
+      return next(err);
+    } else {
+      response.status(200).json({
+        message: "You have signed up successfully. Please sign in!!",
       });
-    } else response.status(400).send("Please Enter Required Details");
-  } else
-    response.status(409).send("User already registered, Please Sign In...");
+    }
+  });
 }
 
-async function signInUser(request, response) {
-  const { errors, isValid } = ValidateSigninInput(request.body);
-  if (!isValid) {
-    return res.status(400).json(errors);
-  }
-
+async function signInUser(request, response, next) {
   const { email, password } = request.body;
   const user = await User.findOne({ email: email });
+  const err = new Error();
   if (!user) {
-    response.status(404).json({
-      message: "User Not Exist.",
-      status: 404,
-    });
-  } else {
-    let readIdList = user.readingList.map((item) => item.postId);
-
-    const customResponse = {
-      _id: user._id,
-      fullName: user.fullName,
-      email: user.email,
-      profilePhoto: user.profilePhoto,
-      readingList: readIdList
-    };
-    bcrypt.compare(password, user.hash, (err, compareRes) => {
-      if (err) {
-        response
-          .status(502)
-          .json({ message: "Server error while checking user password" });
-      } else if (compareRes) {
-        const token = jwt.sign({ email: email }, process.env.SECRET_KEY, {
-          expiresIn: process.env.EXPIRE_IN,
-        });
-        response.status(200).json({
-          accessToken: token,
-          user: customResponse,
-        });
-      } else {
-        response.status(401).json({
-          message: "Invalid Credentials! Please try again.",
-        });
-      }
-    });
+    err.status = "UserNotExist";
+    return next(err);
   }
+
+  let isPasswordMatched = await BcryptHelper.compare(password, user.hash);
+  if (!isPasswordMatched) {
+    err.status = "PasswordMismatch";
+    return next(err);
+  }
+
+  let readIdList = user.readingList.map((item) => item.postId);
+  const customResponse = {
+    _id: user._id,
+    fullName: user.fullName,
+    email: user.email,
+    profilePhoto: user.profilePhoto,
+    readingList: readIdList,
+  };
+
+  const token = jwt.sign({ email: email }, process.env.SECRET_KEY, {
+    expiresIn: process.env.EXPIRE_IN,
+  });
+
+  response.status(200).json({
+    accessToken: token,
+    user: customResponse,
+  });
 }
 
-async function googleSignInUser(request, response) {
+async function googleSignInUser(request, response, next) {
   const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
   const { idToken } = request.body;
 
   client
     .verifyIdToken({ idToken, audience: process.env.GOOGLE_CLIENT_ID })
-    .then((res) => {
+    .then(async (res) => {
       const { email_verified, name, email } = res.payload;
-      if (email_verified) {
-        User.findOne({ email }).exec((err, user) => {
-          if (user) {
-            const { _id, email, fullName } = user;
+      if (!email_verified) {
+        return res.status(400).json({
+          error: "Google signin failed. Please try again!",
+        });
+      }
+      const user = await User.findOne({ email: email });
+      if (!user) {
+        let newUser = new User();
+        let password = email + process.env.SECRET_KEY;
+        let passwordHash = await BcryptHelper.hashed(password);
+        newUser.fullName = name;
+        newUser.email = email;
+        newUser.hash = passwordHash;
 
+        newUser.save((err, data) => {
+          if (err) {
+            response.status(500).json({
+              message:
+                "SignUp with google data is failed due to some technical issue",
+            });
+          } else {
+            const { _id, email, fullName } = data;
             const token = jwt.sign({ email: email }, process.env.SECRET_KEY, {
               expiresIn: process.env.EXPIRE_IN,
             });
@@ -108,43 +110,23 @@ async function googleSignInUser(request, response) {
               accessToken: token,
               user: { _id, email, fullName },
             });
-          } else {
-            const password = email + process.env.SECRET_KEY;
-
-            bcrypt.hash(password, 12, async (err, passwordHash) => {
-              if (err) {
-                response.status(500).send("Couldn't hash the password");
-              } else if (passwordHash) {
-                return User.create({
-                  email: email,
-                  fullName: name,
-                  hash: passwordHash,
-                }).then((data) => {
-                  const { _id, email, fullName } = data;
-                  const token = jwt.sign(
-                    { email: email },
-                    process.env.SECRET_KEY,
-                    { expiresIn: process.env.EXPIRE_IN }
-                  );
-
-                  response.status(200).json({
-                    accessToken: token,
-                    user: { _id, email, fullName },
-                  });
-                });
-              }
-            });
           }
         });
       } else {
-        return res.status(400).json({
-          error: "Google login failed. Try again",
+        const { _id, email, fullName } = user;
+        const token = jwt.sign({ email: email }, process.env.SECRET_KEY, {
+          expiresIn: process.env.EXPIRE_IN,
+        });
+
+        response.status(200).json({
+          accessToken: token,
+          user: { _id, email, fullName },
         });
       }
     });
 }
 
-async function forgetPassword(request, response) {
+async function forgetPassword(request, response, next) {
   const { email } = request.body;
   if (email === "") {
     response.status(400).send("Email Address Required..");
@@ -202,7 +184,7 @@ async function forgetPassword(request, response) {
   }
 }
 
-async function resetPassword(request, response) {
+async function resetPassword(request, response, next) {
   const { password } = request.body;
   const { id } = request.params;
 
@@ -230,18 +212,22 @@ async function resetPassword(request, response) {
 async function validateResetLink(request, response) {
   const { id, token } = request.params;
   const user = await User.findById(id);
-  if (user) {
-    const tok = await Token.findOne({
-      userId: user._id,
-      token: token,
-    });
+  const err = new Error();
+  if (!user) {
+    err.status = "UserNotExist";
+    return next(err);
+  }
 
-    if (tok) {
-      await user.save();
-      await tok.delete();
-      response.status(200).send("Reset Link Is-Ok");
-    } else response.status(400).send("Invalid Link Or Link Expired");
-  } else response.status(404).send("User Not Found");
+  const tok = await Token.findOne({
+    userId: user._id,
+    token: token,
+  });
+
+  if (tok) {
+    await user.save();
+    await tok.delete();
+    response.status(200).send("Reset Link Is-Ok");
+  } else response.status(400).send("Invalid Link Or Link Expired");
 }
 
 module.exports = {

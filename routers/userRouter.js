@@ -2,7 +2,7 @@ const express = require("express");
 const mainRoutes = express.Router();
 
 const Upload = require("./../middleware/upload");
-const { isAuth } = require("./../middleware/isAuth");
+const { isAuth } = require("./../middleware/authMiddleware/isAuth");
 const { apiLimiter } = require("./../middleware/rateLimiter");
 const userController = require("./../controllers/userController");
 
@@ -22,6 +22,12 @@ mainRoutes.put(
 mainRoutes.put("/addtoreadinglist/:id", addToReadingList);
 mainRoutes.put("/removefromreadinglist/:id", removeFromReadingList);
 mainRoutes.get("/fetchReadingList/:id", fetchReadingList);
+mainRoutes.all("*", (request, response, next) => {
+  const err = new Error(`Can't find ${request.originalUrl} on this server!`);
+  err.status = 'Not A Valid Auth Route';
+  err.statusCode = 404;
+  next(err);
+});
 
 function getProfile(request, response, next) {
   userController.getProfile(request, response, next);

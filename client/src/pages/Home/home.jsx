@@ -5,7 +5,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { useNavigate } from "react-router-dom";
 import { FaHeart, FaRegComment } from "react-icons/fa";
 import { useSelector, useDispatch } from "react-redux";
-import { Container, Row, Col, Button, Image } from "react-bootstrap";
+import { Container, Row, Col, Button, Image, Card } from "react-bootstrap";
 
 import {
   addtoreadinglist,
@@ -15,12 +15,15 @@ import homeStyle from "./home.module.css";
 import Navbar from "../../components/navbar";
 import FeedService from "../../services/feedService";
 import PLACEHOLDER_IMG from "../../assets/images/h1.png";
+const topicList = ["jsx", "java", "jquery", "javascript", "reactjs", "nodejs"];
 
 const Home = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [userId, setUserId] = useState();
   const [userPosts, setUserPosts] = useState([]);
+  const [searchData, setSearchData] = useState([]);
+  const [profilePhoto, setProfilePhoto] = useState(null);
 
   const [dimensions, setDimensions] = useState({
     height: window.innerHeight,
@@ -35,6 +38,7 @@ const Home = () => {
     window.addEventListener("resize", handleResize);
     if (loggedInUser) {
       setUserId(loggedInUser._id);
+      setProfilePhoto(loggedInUser.profilePhoto);
       fetchPostData();
     }
     return () => {
@@ -132,10 +136,9 @@ const Home = () => {
     }
     return (
       <Row
-        className={homeStyle.secondColumn}
+        className={homeStyle.middleColumn}
         style={{
-          borderColor: "yellow",
-          border: "1px solid gray",
+          border: "1px solid yellow",
           borderRadius: 10,
         }}
         key={index}
@@ -143,10 +146,12 @@ const Home = () => {
         <div className={homeStyle.cardHeader}>
           <Image src={profilePic} width={50} height={50} roundedCircle />
           <div className={homeStyle.cardName}>
-            <strong>{item.postedBy.fullName}</strong>
-            <p>
+            <span>
+              <strong>{item.postedBy.fullName}</strong>
+            </span>
+            <span>
               {formateDate} {hourAgo > 1 ? hourAgo : minAgo}
-            </p>
+            </span>
           </div>
         </div>
         <div className={homeStyle.cardBody}>
@@ -180,7 +185,16 @@ const Home = () => {
     );
   };
 
-  const searchTopic = (name) => console.log("searched text:", name);
+  const searchTopic = (text) => {
+    if (text !== "") {
+      let filtered = topicList.filter((item) =>
+        item.includes(text.toLowerCase())
+      );
+      setSearchData(filtered);
+    } else {
+      setSearchData([]);
+    }
+  };
 
   const debounce = (func, timeout = 500) => {
     let timer;
@@ -196,33 +210,50 @@ const Home = () => {
 
   return (
     <Fragment>
-      <Navbar showSearchBar={true} onSearch={onSearch} />
+      <Navbar
+        showSearchBar={true}
+        onSearch={onSearch}
+        searchData={searchData}
+      />
       <Container
         className={homeStyle.container}
         style={{ minHeight: dimensions.height }}
       >
         <Row>
-          <Col xl={2} lg={3}>
+          <Col
+            xl={2}
+            lg={3}
+            style={{ display: dimensions.width < 520 ? "none" : null }}
+          >
             <Container fluid="xl">
-              <Row className={homeStyle.firstColumnFirstRow}>
-                <div
+              <Row className={homeStyle.leftColumn}>
+                <Card
                   style={{
                     paddingTop: 10,
                     paddingBottom: 10,
                   }}
                 >
-                  <article>
-                    <h4>Everything on one place</h4>
-                    <p>
-                      A Platform where you can find everything related with
-                      javascript like Interview questions, Javascript programs,
-                      Javascript data structure, codeing challenge and latest
-                      article on Javascript.
-                    </p>
-                  </article>
-                </div>
+                  <Card.Img variant="top" src={profilePhoto} />
+                  <Card.Body>
+                    <Card.Title style={{ textAlign: "center" }}>
+                      {loggedInUser.fullName}
+                    </Card.Title>
+                    <Card.Text style={{ textAlign: "center" }}>
+                      <p>
+                        <strong>
+                          {loggedInUser.education
+                            ? loggedInUser.education
+                            : "Static Position"}
+                        </strong>
+                      </p>
+                    </Card.Text>
+                  </Card.Body>
+                </Card>
               </Row>
-              <Row className={homeStyle.firstColumnSecondRow}>
+              <Row
+                className={homeStyle.leftColumn}
+                style={{ backgroundColor: "#f7dc6f" }}
+              >
                 <div
                   style={{
                     paddingTop: 10,
@@ -251,7 +282,10 @@ const Home = () => {
           </Col>
           <Col xl={3} lg={3}>
             <Container fluid="xl">
-              <Row className={homeStyle.firstColumnFirstRow}>
+              <Row
+                className={homeStyle.rightColumn}
+                style={{ backgroundColor: "#f7dc6f" }}
+              >
                 <div
                   style={{
                     paddingTop: 10,
@@ -267,7 +301,10 @@ const Home = () => {
                   </article>
                 </div>
               </Row>
-              <Row className={homeStyle.firstColumnFirstRow}>
+              <Row
+                className={homeStyle.rightColumn}
+                style={{ backgroundColor: "#f7dc6f" }}
+              >
                 <div
                   style={{
                     paddingTop: 10,
@@ -285,83 +322,6 @@ const Home = () => {
               </Row>
             </Container>
           </Col>
-          {/* <Col md={3}>
-            <Row
-              className={homeStyle.rightCardSection}
-              // style={{ backgroundColor: "#abcff7" }}
-            >
-              <Image
-                src={JAVASCRIPT_IMG2}
-                style={{
-                  cursor: "pointer",
-                  borderRadius: "30px",
-                  width: "100%",
-                  height: "200px",
-                }}
-                onClick={openJavaScriptSection}
-              />
-            </Row>
-            <Row
-              className={homeStyle.rightCardSection}
-              // style={{ backgroundColor: "#f9e79f" }}
-            >
-              <Image
-                src={REACTJS_IMG}
-                style={{
-                  cursor: "pointer",
-                  borderRadius: "30px",
-                  width: "100%",
-                  height: "200px",
-                }}
-                onClick={openReactJSSection}
-              />
-            </Row>
-            <Row
-              className={homeStyle.rightCardSection}
-              // style={{ backgroundColor: "#f1948a" }}
-            >
-              <Image
-                src={RN_IMG}
-                style={{
-                  cursor: "pointer",
-                  borderRadius: "30px",
-                  width: "100%",
-                  height: "200px",
-                }}
-                onClick={openReactNativeSection}
-              />
-            </Row>
-            <Row
-              className={homeStyle.rightCardSection}
-              // style={{ backgroundColor: "#f7dc6f" }}
-            >
-              <Image
-                src={NODE_JPG}
-                style={{
-                  cursor: "pointer",
-                  borderRadius: "30px",
-                  width: "100%",
-                  height: "100%",
-                }}
-                onClick={openNodeJSSection}
-              />
-            </Row>
-            <Row
-              className={homeStyle.rightCardSection}
-              // style={{ backgroundColor: "#f7dc6f" }}
-            >
-              <Image
-                src={NODE_JPG}
-                style={{
-                  cursor: "pointer",
-                  borderRadius: "30px",
-                  width: "100%",
-                  height: "100%",
-                }}
-                onClick={openNodeJSSection}
-              />
-            </Row>
-          </Col> */}
         </Row>
       </Container>
     </Fragment>

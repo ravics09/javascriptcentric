@@ -39,9 +39,7 @@ const signIn = async (payload) => {
     .catch((error) => {
       return {
         status: "failed",
-        message: error
-          ? "Server is not responding"
-          : error.response.data.message,
+        message: error.response.data.message
       };
     });
 };
