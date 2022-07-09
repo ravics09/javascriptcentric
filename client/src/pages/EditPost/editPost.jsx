@@ -4,28 +4,22 @@ import { useSelector, useDispatch } from "react-redux";
 import * as yup from "yup";
 import swal from "sweetalert";
 import { Formik } from "formik";
+import { Editor } from "@tinymce/tinymce-react";
+import { Container, Row, Col, Button, Form, InputGroup } from "react-bootstrap";
+
 import "bootstrap/dist/css/bootstrap.min.css";
 import editPostStyle from "./editPost.module.css";
-import { Container, Row, Col, Button, Form, InputGroup } from "react-bootstrap";
 
 import Navbar from "../../components/navbar";
 import FeedService from "../../services/feedService";
 
-const validationSchema = yup.object().shape({
-  title: yup
-    .string()
-    .max(100, "*Title must be less than 100 characters")
-    .required("Post Title is mendatory"),
-  content: yup
-    .string()
-    .max(5000, "*Content must be less than 5000 characters")
-    .required("Post Content is mendatory"),
-});
-
 const EditPost = () => {
   const navigate = useNavigate();
-  const formikRef = useRef();
+  const postTitleRef = useRef();
+  const postTagsRef = useRef();
+  const postContentRef = useRef();
   const { id } = useParams();
+  const [userId, setUserId] = useState("");
   const [isLoading, setLoading] = useState(false);
   const [pageLoading, setPageLoading] = useState(false);
   const { loggedInUser, isLoggedIn } = useSelector(
@@ -34,10 +28,6 @@ const EditPost = () => {
   const [dimensions, setDimensions] = useState({
     height: window.innerHeight,
     width: window.innerWidth,
-  });
-  const [initialValues, setInitialValues] = useState({
-    title: "",
-    content: "",
   });
 
   const simulateNetworkRequest = () => {
@@ -49,12 +39,12 @@ const EditPost = () => {
     if (result.status === "success") {
       const authorId = result.post.postedBy._id;
       const loggedInUserId = loggedInUser._id;
+      console.log("result.post",result.post)
       if (authorId === loggedInUserId) {
         setPageLoading(false);
-        if (formikRef.current) {
-          formikRef.current.setFieldValue("title", result.post.postTitle);
-          formikRef.current.setFieldValue("content", result.post.postContent);
-        }
+        postTitleRef.current.value = result.post.postTitle;
+        postTagsRef.current.value = result.post.tags;
+        postContentRef.current.value = result.post.postContent;
       } else {
         setPageLoading(false);
         navigate("/home", { replace: true });
@@ -65,6 +55,7 @@ const EditPost = () => {
   useEffect(() => {
     setPageLoading(true);
     if (isLoggedIn) {
+      setUserId(loggedInUser._id);
       fetchPostData();
     }
 
@@ -75,11 +66,21 @@ const EditPost = () => {
     }
   }, []);
 
-  const onSubmitPost = async (formValues) => {
-    const { title, content } = formValues;
+  const inputStyle = {
+    margin: "5px 0 10px 0",
+    padding: "5px",
+    border: "1px solid #bfbfbf",
+    borderRadius: "3px",
+    boxSizing: "border-box",
+    width: "100%",
+  };
+
+  const handleSubmitPost = async (e) => {
+    e.preventDefault();
     const payload = {
-      title,
-      content,
+      postTitle: postTitleRef.current.value,
+      postTags: postTagsRef.current.value,
+      postContent: postContentRef.current,
     };
 
     const result = await FeedService.editPost(id, payload);
@@ -106,6 +107,112 @@ const EditPost = () => {
     }
   };
 
+  const handleResetForm = () => {
+    postTitleRef.current.value = "";
+    postTagsRef.current.value = "";
+    postContentRef.current.value = "";
+  };
+
+  const Field = React.forwardRef(({ type, placeholder }, ref) => {
+    return (
+      <div>
+        <input
+          ref={ref}
+          type={type}
+          placeholder={placeholder}
+          style={inputStyle}
+        />
+      </div>
+    );
+  });
+
+  const PostForm = () => {
+    return (
+      <div className={editPostStyle.formStyle}>
+        <h4>Edit Post</h4>
+        <form onSubmit={handleSubmitPost}>
+          <Field
+            ref={postTitleRef}
+            type="text"
+            placeholder="post title here...."
+          />
+          <Field
+            ref={postTagsRef}
+            type="text"
+            placeholder="add some tags here"
+          />
+          <Editor
+            textareaName="content"
+            ref={postContentRef}
+            value={postContentRef.current}
+            style={inputStyle}
+            onEditorChange={(newValue, editor) =>
+              (postContentRef.current = newValue)
+            }
+            apiKey="usrqd654ieh6pdqwrlrqsp9yau9eq3pcmhtpxjucyil29phd"
+            init={{
+              height: 500,
+              menubar: true,
+              selector: "textarea",
+              plugins: [
+                "advlist",
+                "autolink",
+                "lists",
+                "link",
+                "image",
+                "charmap",
+                "preview",
+                "anchor",
+                "searchreplace",
+                "visualblocks",
+                "code",
+                "fullscreen",
+                "insertdatetime",
+                "media",
+                "table",
+                "code",
+                "help",
+                "wordcount",
+              ],
+              toolbar:
+                "undo redo | blocks | " +
+                "bold italic forecolor | alignleft aligncenter " +
+                "alignright alignjustify | bullist numlist outdent indent | " +
+                "removeformat | help" +
+                "code" +
+                "link" +
+                "preview",
+              content_style:
+                "body { font-family:Helvetica,Arial,sans-serif; font-size:14px }",
+              link_default_target: "_blank",
+            }}
+          />
+          <div style={{ marginTop: "10px", marginBottom: "10px" }}>
+            <Button
+              block
+              className={editPostStyle.customBtn}
+              type="submit"
+              disabled={isLoading}
+              variant={isLoading ? "success" : "primary"}
+            >
+              {isLoading ? "Saving" : "Save"}
+            </Button>
+            &nbsp;&nbsp;&nbsp;
+            <Button
+              block
+              className={editPostStyle.customBtn}
+              type="reset"
+              variant="outline-danger"
+              onClick={handleResetForm}
+            >
+              Clear
+            </Button>
+          </div>
+        </form>
+      </div>
+    );
+  };
+
   return (
     <Fragment>
       <Navbar showSearchBar={false} />
@@ -114,119 +221,10 @@ const EditPost = () => {
         style={{ minHeight: dimensions.height }}
       >
         {pageLoading ? null : (
-          <Row className="mb-3">
-            <Col md={9}>
-              <Formik
-                validationSchema={validationSchema}
-                innerRef={formikRef}
-                initialValues={initialValues}
-                onSubmit={(values, { setSubmitting }) => {
-                  setSubmitting(true);
-                  setLoading(true);
-                  if (values) {
-                    onSubmitPost(values);
-                  }
-                  setTimeout(() => {
-                    setSubmitting(false);
-                    setLoading(false);
-                  }, 3000);
-                }}
-              >
-                {({
-                  handleSubmit,
-                  handleChange,
-                  handleBlur,
-                  resetForm,
-                  isSubmitting,
-                  values,
-                }) => (
-                  <Form
-                    onSubmit={handleSubmit}
-                    className={editPostStyle.postForm}
-                  >
-                    <Row className="mb-5">
-                      <h3 style={{ marginLeft: 10 }}>Edit Your Post</h3>
-                    </Row>
-                    <Row className="mb-3">
-                      <Form.Group
-                        as={Col}
-                        md="12"
-                        controlId="validationPostTitle"
-                      >
-                        <InputGroup>
-                          <Form.Control
-                            type="text"
-                            autoFocus
-                            placeholder="New Post Title Here..."
-                            name="title"
-                            className={editPostStyle.postTitle}
-                            value={values.title}
-                            onBlur={handleBlur}
-                            onChange={handleChange}
-                          />
-                        </InputGroup>
-                      </Form.Group>
-                    </Row>
-                    <Row className="mb-3">
-                      <Form.Group
-                        as={Col}
-                        md="12"
-                        controlId="validationPostContent"
-                      >
-                        <InputGroup>
-                          <Form.Control
-                            as="textarea"
-                            type="text"
-                            placeholder="Write your post content here..."
-                            name="content"
-                            className={editPostStyle.postContent}
-                            value={values.content}
-                            onBlur={handleBlur}
-                            onChange={handleChange}
-                            maxlength="5000"
-                            minlength="10"
-                          />
-                        </InputGroup>
-                      </Form.Group>
-                    </Row>
-                    <Row className="mb-2" style={{ padding: 10 }}>
-                      <Button
-                        block
-                        className={editPostStyle.customBtn}
-                        type="submit"
-                        disabled={isLoading}
-                        variant={isLoading ? "success" : "primary"}
-                      >
-                        {isLoading ? "Waiting to save" : "Save Changes"}
-                      </Button>
-                      &nbsp;&nbsp;&nbsp;
-                      <Button
-                        block
-                        className={editPostStyle.customBtn}
-                        type="reset"
-                        disabled={isSubmitting}
-                        variant="outline-danger"
-                        onClick={resetForm}
-                      >
-                        Clear All
-                      </Button>
-                      &nbsp;&nbsp;&nbsp;
-                      <Button
-                        block
-                        className={editPostStyle.customBtn}
-                        type="reset"
-                        disabled={isSubmitting}
-                        variant="danger"
-                        onClick={() => navigate(`/home`, { replace: true })}
-                      >
-                        Go Back
-                      </Button>
-                    </Row>
-                  </Form>
-                )}
-              </Formik>
+          <Row>
+            <Col xl={12} lg={12} md={12}>
+            <PostForm />
             </Col>
-            <Col md={3}></Col>
           </Row>
         )}
       </Container>

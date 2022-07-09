@@ -27,17 +27,21 @@ const ListComponent = (items) => {
   return (
     <div
       style={{
+        color: "black",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
+        paddingTop: "50px",
+        paddingBottom: "50px",
+        backgroundColor: "red",
       }}
     >
       {arr.map((item) => (
         <div
           style={{
             display: "flex",
-            marginTop: "10px",
-            padding: "10px",
+            // marginTop: "10px",
+            // padding: "10px",
             flexDirection: dimensions.width > 700 ? "row" : "column",
           }}
           key={item.id}
@@ -49,14 +53,11 @@ const ListComponent = (items) => {
           />
           <div
             style={{
-              color: "white",
               display: "flex",
               flexDirection: "column",
               justifyContent: "center",
               alignItems: "center",
-              textAlign: "center",
-              // width: "50%",
-              // height: "200px",
+              textAlign: "center"
             }}
           >
             <>

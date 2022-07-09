@@ -1,42 +1,22 @@
-import React, { useState, useEffect, Fragment } from "react";
-import * as yup from "yup";
+import React, { useState, useEffect, useRef, Fragment } from "react";
 import swal from "sweetalert";
-import { Formik } from "formik";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
+import { Editor } from "@tinymce/tinymce-react";
+import { Container, Row, Col, Button } from "react-bootstrap";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import createPostStyle from "./createPost.module.css";
-import { Container, Row, Col, Button, Form, InputGroup } from "react-bootstrap";
 
 import Navbar from "../../components/navbar";
 import FeedService from "../../services/feedService";
 
-const validationSchema = yup.object().shape({
-  title: yup
-    .string()
-    .max(100, "*Title must be less than 100 characters")
-    .required("Post Title is mendatory"),
-  content: yup
-    .string()
-    .max(5000, "*Content must be less than 5000 characters")
-    .required("Post Content is mendatory"),
-  // tags: yup
-  //   .array()
-  //   .length(3, "Max 3 tags are allowed")
-  //   .required("tags is mendatory"),
-});
-
-const initialValues = {
-  title: "",
-  content: "",
-  // tags: [],
-};
-
 const CreatePost = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
+  const postTitleRef = useRef();
+  const postTagsRef = useRef();
+  const postContentRef = useRef();
   const [userId, setUserId] = useState("");
   const [isLoading, setLoading] = useState(false);
   const { loggedInUser } = useSelector((state) => state.AuthReducer);
@@ -61,16 +41,23 @@ const CreatePost = () => {
     }
   }, []);
 
-  const handleSubmitPost = async (formValues) => {
-    let postTitle = formValues.title;
-    let postContent = formValues.content;
+  const inputStyle = {
+    margin: "5px 0 10px 0",
+    padding: "5px",
+    border: "1px solid #bfbfbf",
+    borderRadius: "3px",
+    boxSizing: "border-box",
+    width: "100%",
+  };
 
+  const handleSubmitPost = async (e) => {
+    e.preventDefault();
     const payload = {
       userId,
-      postTitle,
-      postContent,
+      postTitle: postTitleRef.current.value,
+      postTags: postTagsRef.current.value,
+      postContent: postContentRef.current,
     };
-
     const result = await FeedService.createPost(payload);
 
     if (result.status === "success") {
@@ -95,137 +82,122 @@ const CreatePost = () => {
     }
   };
 
+  const handleResetForm = () => {
+    postTitleRef.current.value = "";
+    postTagsRef.current.value = "";
+    postContentRef.current.value = "";
+  };
+
+  const Field = React.forwardRef(({ type, placeholder }, ref) => {
+    return (
+      <div>
+        <input
+          ref={ref}
+          type={type}
+          placeholder={placeholder}
+          style={inputStyle}
+        />
+      </div>
+    );
+  });
+
+  const PostForm = () => {
+    return (
+      <div className={createPostStyle.formStyle}>
+        <h4>Create Post</h4>
+        <form onSubmit={handleSubmitPost}>
+          <Field
+            ref={postTitleRef}
+            type="text"
+            placeholder="post title here...."
+          />
+          <Field
+            ref={postTagsRef}
+            type="text"
+            placeholder="add some tags here"
+          />
+          <Editor
+            textareaName="content"
+            value={postContentRef.current}
+            style={inputStyle}
+            onEditorChange={(newValue, editor) =>
+              (postContentRef.current = newValue)
+            }
+            apiKey="usrqd654ieh6pdqwrlrqsp9yau9eq3pcmhtpxjucyil29phd"
+            init={{
+              height: 500,
+              menubar: true,
+              selector: "textarea",
+              plugins: [
+                "advlist",
+                "autolink",
+                "lists",
+                "link",
+                "image",
+                "charmap",
+                "preview",
+                "anchor",
+                "searchreplace",
+                "visualblocks",
+                "code",
+                "fullscreen",
+                "insertdatetime",
+                "media",
+                "table",
+                "code",
+                "help",
+                "wordcount",
+              ],
+              toolbar:
+                "undo redo | blocks | " +
+                "bold italic forecolor | alignleft aligncenter " +
+                "alignright alignjustify | bullist numlist outdent indent | " +
+                "removeformat | help" +
+                "code" +
+                "link" +
+                "preview",
+              content_style:
+                "body { font-family:Helvetica,Arial,sans-serif; font-size:14px }",
+              link_default_target: "_blank",
+            }}
+          />
+          <div style={{ marginTop: "10px", marginBottom: "10px" }}>
+            <Button
+              block
+              className={createPostStyle.customBtn}
+              type="submit"
+              disabled={isLoading}
+              variant={isLoading ? "success" : "primary"}
+            >
+              {isLoading ? "Waiting to publish" : "Publish"}
+            </Button>
+            &nbsp;&nbsp;&nbsp;
+            <Button
+              block
+              className={createPostStyle.customBtn}
+              type="reset"
+              variant="outline-danger"
+              onClick={handleResetForm}
+            >
+              Clear
+            </Button>
+          </div>
+        </form>
+      </div>
+    );
+  };
+
   return (
     <Fragment>
-      <Navbar showSearchBar={false}/>
+      <Navbar showSearchBar={false} />
       <Container
         className={createPostStyle.container}
         style={{ minHeight: dimensions.height }}
       >
-        <Row >
-          <Col xl={12} lg={6} md={9}>
-            <Formik
-              validationSchema={validationSchema}
-              initialValues={initialValues}
-              onSubmit={(values, { setSubmitting }) => {
-                setSubmitting(true);
-                setLoading(true);
-                if (values) {
-                  handleSubmitPost(values);
-                } else {
-                  alert("Title missing");
-                }
-                setTimeout(() => {
-                  setSubmitting(false);
-                  setLoading(false);
-                }, 3000);
-              }}
-            >
-              {({
-                handleSubmit,
-                handleChange,
-                handleBlur,
-                resetForm,
-                isSubmitting,
-                values,
-                touched,
-                errors,
-              }) => (
-                <Form
-                  onSubmit={handleSubmit}
-                  className={createPostStyle.postForm}
-                >
-                  <Row className="mb-3">
-                    <h3 style={{ marginLeft: 10 }}>Create A New Post</h3>
-                  </Row>
-                  <Row className="mb-3">
-                    <Form.Group
-                      as={Col}
-                      md="12"
-                      controlId="validationPostTitle"
-                    >
-                      <InputGroup>
-                        <Form.Control
-                          type="text"
-                          autoFocus
-                          placeholder="New Post Title Here..."
-                          name="title"
-                          className={createPostStyle.postTitle}
-                          value={values.title}
-                          onBlur={handleBlur}
-                          onChange={handleChange}
-                        />
-                      </InputGroup>
-                    </Form.Group>
-                  </Row>
-                  {/* <Row className="mb-3">
-                    <Form.Group
-                      as={Col}
-                      md="12"
-                      controlId="validationPostTitle"
-                    >
-                      <InputGroup>
-                        <Form.Control
-                          type="text"
-                          placeholder="#tags"
-                          name="tags"
-                          className={createPostStyle.postTags}
-                          value={values.tags}
-                          onBlur={handleBlur}
-                          onChange={handleChange}
-                        />
-                      </InputGroup>
-                    </Form.Group>
-                  </Row> */}
-                  <Row className="mb-3">
-                    <Form.Group
-                      as={Col}
-                      md="12"
-                      controlId="validationPostContent"
-                    >
-                      <InputGroup>
-                        <Form.Control
-                          as="textarea"
-                          type="text"
-                          placeholder="Write your post content here..."
-                          name="content"
-                          className={createPostStyle.postContent}
-                          value={values.content}
-                          onBlur={handleBlur}
-                          onChange={handleChange}
-                          maxlength="5000"
-                          minlength="10"
-                        />
-                      </InputGroup>
-                    </Form.Group>
-                  </Row>
-                  <Row className="mb-2" style={{ padding: 10 }}>
-                    <Button
-                      block
-                      className={createPostStyle.customBtn}
-                      type="submit"
-                      disabled={isLoading}
-                      variant={isLoading ? "success" : "primary"}
-                    >
-                      {isLoading ? "Waiting to publish" : "Publish"}
-                    </Button>
-                    &nbsp;&nbsp;&nbsp;
-                    <Button
-                      block
-                      className={createPostStyle.customBtn}
-                      type="reset"
-                      disabled={isSubmitting}
-                      variant="outline-danger"
-                      onClick={resetForm}
-                    >
-                      Clear
-                    </Button>
-                  </Row>
-                </Form>
-              )}
-            </Formik>
+        <Row>
+          <Col xl={12} lg={12} md={12}>
+            <PostForm />
           </Col>
-          <Col xl={0} lg={6} md={3}></Col>
         </Row>
       </Container>
     </Fragment>

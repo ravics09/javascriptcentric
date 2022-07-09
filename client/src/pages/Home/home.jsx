@@ -4,8 +4,18 @@ import swal from "sweetalert";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useNavigate } from "react-router-dom";
 import { FaHeart, FaRegComment } from "react-icons/fa";
+import { BsTwitter, BsLinkedin, BsFacebook } from "react-icons/bs";
+import { AiOutlineMedium } from "react-icons/ai";
 import { useSelector, useDispatch } from "react-redux";
-import { Container, Row, Col, Button, Image, Card } from "react-bootstrap";
+import {
+  Container,
+  Row,
+  Col,
+  Button,
+  Image,
+  Card,
+  Spinner,
+} from "react-bootstrap";
 
 import {
   addtoreadinglist,
@@ -13,9 +23,22 @@ import {
 } from "../../actions/userAction";
 import homeStyle from "./home.module.css";
 import Navbar from "../../components/navbar";
+import Footer from "../../components/footer";
 import FeedService from "../../services/feedService";
 import PLACEHOLDER_IMG from "../../assets/images/h1.png";
-const topicList = ["jsx", "java", "jquery", "javascript", "reactjs", "nodejs"];
+const topicList = [
+  "jsx",
+  "java",
+  "jquery",
+  "javascript",
+  "nodejs",
+  "expressjs",
+  "mongodb",
+  "redux",
+  "reactjs",
+  "reactnative",
+  "reduxthunk",
+];
 
 const Home = () => {
   const navigate = useNavigate();
@@ -185,6 +208,16 @@ const Home = () => {
     );
   };
 
+  const handleFilteredPosts = async (searchText) => {
+    setUserPosts([]);
+    const result = await FeedService.getFilteredPosts(searchText);
+    if (result.status === "success") {
+      setUserPosts(result.posts);
+    } else {
+      fetchPostData();
+    }
+  };
+
   const searchTopic = (text) => {
     if (text !== "") {
       let filtered = topicList.filter((item) =>
@@ -193,6 +226,7 @@ const Home = () => {
       setSearchData(filtered);
     } else {
       setSearchData([]);
+      fetchPostData();
     }
   };
 
@@ -208,12 +242,18 @@ const Home = () => {
 
   const onSearch = debounce((e) => searchTopic(e));
 
+  const clearSearchData = () => {
+    setSearchData([]);
+  };
+
   return (
     <Fragment>
       <Navbar
         showSearchBar={true}
         onSearch={onSearch}
         searchData={searchData}
+        clearSearchData={clearSearchData}
+        handleFilteredPosts={handleFilteredPosts}
       />
       <Container
         className={homeStyle.container}
@@ -233,7 +273,10 @@ const Home = () => {
                     paddingBottom: 10,
                   }}
                 >
-                  <Card.Img variant="top" src={profilePhoto} />
+                  <Card.Img
+                    variant="top"
+                    src={profilePhoto ? profilePhoto : PLACEHOLDER_IMG}
+                  />
                   <Card.Body>
                     <Card.Title style={{ textAlign: "center" }}>
                       {loggedInUser.fullName}
@@ -243,7 +286,7 @@ const Home = () => {
                         <strong>
                           {loggedInUser.education
                             ? loggedInUser.education
-                            : "Static Position"}
+                            : null}
                         </strong>
                       </p>
                     </Card.Text>
@@ -260,12 +303,52 @@ const Home = () => {
                     paddingBottom: 10,
                   }}
                 >
-                  <h4>Other Technologies</h4>
-                  <p>ExpressJS</p>
-                  <p>MongoDB</p>
-                  <p>Redux</p>
-                  <p>Redux Saga</p>
-                  <p>AWS</p>
+                  <h4>Follow Us</h4>
+                  <p>
+                    <BsLinkedin color="#0C63BC" />{" "}
+                    <a
+                      style={{ textDecoration: "none" }}
+                      href="https://www.linkedin.com/in/ravics09/"
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      LinkedIn
+                    </a>
+                  </p>
+                  <p>
+                    {" "}
+                    <AiOutlineMedium color="black" />{" "}
+                    <a
+                      style={{ textDecoration: "none" }}
+                      href="https://medium.com/@javascriptcentric"
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      Medium
+                    </a>
+                  </p>
+                  <p>
+                    <BsFacebook color="#0C63BC" />{" "}
+                    <a
+                      style={{ textDecoration: "none" }}
+                      href="https://www.facebook.com/javascriptcentric"
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      Facebook
+                    </a>
+                  </p>
+                  <p>
+                    <BsTwitter color="#0C63BC" />{" "}
+                    <a
+                      style={{ textDecoration: "none" }}
+                      href="https://www.w3schools.com"
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      Twitter
+                    </a>
+                  </p>
                   <p></p>
                 </div>
               </Row>
@@ -273,11 +356,21 @@ const Home = () => {
           </Col>
           <Col xl={7} lg={6} md={12} xs={12}>
             <Container fluid="xl">
-              {userPosts
-                ? userPosts.map((item, index) => (
-                    <PostCard item={item} index={index} />
-                  ))
-                : null}
+              {userPosts.length > 0 ? (
+                userPosts.map((item, index) => (
+                  <PostCard item={item} index={index} />
+                ))
+              ) : (
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    paddingTop: "25%"
+                  }}
+                >
+                  <Spinner color="white" animation="grow" />
+                </div>
+              )}
             </Container>
           </Col>
           <Col xl={3} lg={3}>
@@ -324,6 +417,7 @@ const Home = () => {
           </Col>
         </Row>
       </Container>
+      <Footer />
     </Fragment>
   );
 };

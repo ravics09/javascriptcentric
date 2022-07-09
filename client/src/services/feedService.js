@@ -22,7 +22,7 @@ const createPost = async (payload) => {
 };
 
 const getAllPosts = async () => {
-  const url = "http://localhost:9090/feed/getPosts";
+  const url = "http://localhost:9090/feed/getposts";
   return axios
     .get(url)
     .then((response) => {
@@ -30,6 +30,26 @@ const getAllPosts = async () => {
         return {
           status: "success",
           posts: response.data.posts,
+        };
+      }
+    })
+    .catch((error) => {
+      return {
+        status: "failed",
+        message: error.response.data.message,
+      };
+    });
+};
+
+const getFilteredPosts = async (searchText) => {
+  const url = `http://localhost:9090/feed/getfilteredposts/${searchText}`;
+  return axios
+    .get(url)
+    .then((response) => {
+      if (response.status === 200) {
+        return {
+          status: "success",
+          posts: response.data.filteredposts,
         };
       }
     })
@@ -197,7 +217,7 @@ const addToLikedBy = async (id, userId) => {
   );
 };
 
-const removeFromLikedBy = async(id, userId) => {
+const removeFromLikedBy = async (id, userId) => {
   const url = `http://localhost:9090/feed/removefromlikedby/${id}`;
   const payload = {
     userId,
@@ -225,11 +245,12 @@ const removeFromLikedBy = async(id, userId) => {
       }
     }
   );
-}
+};
 
 const feedService = {
   createPost,
   getAllPosts,
+  getFilteredPosts,
   getPost,
   addComment,
   getUserPosts,
@@ -237,7 +258,7 @@ const feedService = {
   deletePost,
   getReadingPost,
   addToLikedBy,
-  removeFromLikedBy
+  removeFromLikedBy,
 };
 
 export default feedService;

@@ -11,7 +11,6 @@ import {
   NavDropdown,
   InputGroup,
   FormControl,
-  Button,
   Form,
   Image,
 } from "react-bootstrap";
@@ -22,7 +21,6 @@ const NavBar = (props) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [userName, setUserName] = useState("");
-  const [dropdownActiveKey, setActiveKey] = useState(1);
   const [searchText, setSearchText] = useState("");
   const [profilePhoto, setProfilePhoto] = useState(null);
   const { isLoggedIn, loggedInUser } = useSelector(
@@ -51,8 +49,11 @@ const NavBar = (props) => {
     });
   };
 
-  const handleSelect = (key) => {
-    setActiveKey(Math.trunc(key));
+  const handleOnSelect = (e) => {
+    e.preventDefault();
+    setSearchText(e.target.innerText);
+    props.clearSearchData();
+    props.handleFilteredPosts(e.target.innerText);
   };
 
   const handleLogout = async () => {
@@ -66,11 +67,6 @@ const NavBar = (props) => {
   const handleSearchText = (e) => {
     setSearchText(e.target.value);
     props.onSearch(e.target.value);
-  };
-
-  const handleSearch = async () => {
-    alert("You searched for" + searchText);
-    // setSearchText("")
   };
 
   return (
@@ -115,7 +111,7 @@ const NavBar = (props) => {
             </Nav.Link>
           </Nav>
           {props.showSearchBar ? (
-            <Form className="d-flex" >
+            <Form className="d-flex">
               <Container>
                 <InputGroup>
                   <FormControl
@@ -125,20 +121,29 @@ const NavBar = (props) => {
                     aria-label="Search"
                     onChange={(e) => handleSearchText(e)}
                   />
-                  <Button variant="dark" onClick={() => handleSearch()}>
-                    Search
-                  </Button>
                 </InputGroup>
                 <Container
                   style={{
                     position: "fixed",
                     backgroundColor: "white",
-                    width:  dimensions.width < 520 ? "375px" : "202px",
+                    width: dimensions.width < 520 ? "375px" : "202px",
                   }}
                 >
                   {props.searchData
-                    ? props.searchData.map((item) => (
-                        <p style={{ color: "black", paddingTop: "10px",border: "1px solid white" }}>{item}</p>
+                    ? props.searchData.map((item, index) => (
+                        <div key={index}>
+                          <p
+                            style={{
+                              color: "black",
+                              paddingTop: "10px",
+                              border: "1px solid white",
+                              cursor: "pointer",
+                            }}
+                            onClick={(e) => handleOnSelect(e)}
+                          >
+                            {item}
+                          </p>
+                        </div>
                       ))
                     : null}
                 </Container>

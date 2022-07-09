@@ -15,6 +15,7 @@ import {
   Image,
 } from "react-bootstrap";
 import { FaHeart, FaComment, FaStarHalfAlt } from "react-icons/fa";
+import Parser from "html-react-parser";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import fullArticleStyle from "./fullArticle.module.css";
@@ -401,14 +402,13 @@ const FullArticle = () => {
                 </b>
               </div>
 
+              <div className={fullArticleStyle.cardTags}>
+                <p>{postData.tags ? postData.tags.join(","): null}</p>
+              </div>
+
               <div className={fullArticleStyle.cardSubtitle}>
-                <article>
-                  <pre
-                    style={{ "white-space": "pre-line" }}
-                    className={fullArticleStyle.cardBody}
-                  >
-                    {postData.postContent}
-                  </pre>
+                <article className={fullArticleStyle.cardBody}>
+                  {Parser(`${postData.postContent}`)}
                 </article>
               </div>
             </Row>

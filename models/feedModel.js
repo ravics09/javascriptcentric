@@ -18,9 +18,11 @@ const feedSchema = new Schema(
       minLength: [4, "postContent is too short!"],
       maxLength: 5000,
     },
-    tags: {
-      type: Array,
-    },
+    tags: [
+      {
+        type: String,
+      },
+    ],
     topicCover: {
       data: Buffer,
       contentType: String,
@@ -40,7 +42,7 @@ const feedSchema = new Schema(
       {
         userId: String,
       },
-    ]
+    ],
   },
   { timestamps: true }
 );

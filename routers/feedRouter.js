@@ -5,6 +5,7 @@ const feedController = require('./../controllers/feedController');
 mainRoutes.post('/createpost', createPost);
 mainRoutes.get('/getpost/:id', getPost);
 mainRoutes.get('/getposts', getPosts);
+mainRoutes.get('/getfilteredposts/:topic', getFilteredPosts);
 mainRoutes.put('/editpost/:id', editPost);
 mainRoutes.put('/createnewcomment/:id',createPostComment);
 mainRoutes.get('/getuserposts/:id', getUserPosts);
@@ -27,6 +28,10 @@ function getReadingPost(request, response, next) {
 
 function getPosts(request, response, next) {
     feedController.getPosts(request, response, next);
+};
+
+function getFilteredPosts(request, response, next) {
+    feedController.getFilteredPosts(request, response, next);
 };
 
 function editPost(request, response, next) {

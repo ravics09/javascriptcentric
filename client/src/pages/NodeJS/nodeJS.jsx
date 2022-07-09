@@ -1,11 +1,11 @@
 import React, { useState, useEffect, Fragment } from "react";
-import { Row, Container } from "react-bootstrap";
-import Imgix from "react-imgix";
+import { Row, Container, Image } from "react-bootstrap";
 
 import Navbar from "../../components/navbar";
+import Footer from "../../components/footer";
 import NodeJSStyle from "./nodeJS.module.css";
 import ListComponent from "./../../components/listComponent";
-
+import DEVELOPER_IMG from "../../assets/images/developer.png";
 const nodeData = [
   {
     id: 1,
@@ -64,31 +64,37 @@ const NodeJS = () => {
 
   return (
     <Fragment>
-      <Navbar showSearchBar={true} />
-      <Container
-        className={NodeJSStyle.container}
-        style={{ minHeight: dimensions.height }}
+      <Navbar showSearchBar={false} />
+      <div
+        style={{
+          backgroundColor: "#181a1f",
+          paddingTop: "150px",
+          paddingBottom: "50px",
+        }}
       >
-        <Row>
-          <div className={NodeJSStyle.header}>
-            <Imgix
-              src="https://1000logos.net/wp-content/uploads/2020/09/JavaScript-Logo.jpg"
-              width={200}
-              height={200}
-            />
-            <h2>NodeJS</h2>
-            <h5>NodeJS Developer who loves to make incredible backend apps.</h5>
-          </div>
-        </Row>
-        <Row>
-          <ListComponent items={data} />
-        </Row>
-        <Row>
-          <div className={NodeJSStyle.footer}>
-            <h3>This is footer of this page.</h3>
-          </div>
-        </Row>
-      </Container>
+        <Container>
+          <Row>
+            <div className={NodeJSStyle.header}>
+              <Image src={DEVELOPER_IMG} width={200} height={200} />
+              <h2 style={{ padding: "10px" }}>Ravi Sharma</h2>
+              <h5 style={{ color: "gray" }}>
+                NodeJS Developer who loves backend apps.
+              </h5>
+            </div>
+          </Row>
+        </Container>
+      </div>
+      <div style={{ backgroundColor: "#fff", color: "black" }}>
+        <Container
+          className={NodeJSStyle.container}
+          style={{ minHeight: dimensions.height }}
+        >
+          <Row>
+            <ListComponent items={data} />
+          </Row>
+        </Container>
+      </div>
+      <Footer/>
     </Fragment>
   );
 };

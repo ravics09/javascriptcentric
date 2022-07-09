@@ -1,11 +1,13 @@
 const User = require("./../models/userModel");
 const Feed = require("./../models/feedModel");
 
-async function createPost(request, response) {
-  const { userId, postTitle, postContent } = request.body;
+async function createPost(request, response, next) {
+  const { userId, postTitle, postContent, postTags } = request.body;
+  const postTagsArray = await postTags.split(",");
   const feed = new Feed({
     postedBy: userId,
     postTitle: postTitle,
+    tags: postTagsArray,
     postContent: postContent,
   });
 
@@ -16,7 +18,7 @@ async function createPost(request, response) {
   });
 }
 
-async function getPost(request, response) {
+async function getPost(request, response, next) {
   const { id } = request.params;
   Feed.findById({ _id: id })
     .populate("postedBy")
@@ -33,7 +35,7 @@ async function getPost(request, response) {
     });
 }
 
-async function getReadingPost(request, response) {
+async function getReadingPost(request, response, next) {
   const { id } = request.params;
   Feed.findById({ _id: id })
     .select([
@@ -58,9 +60,9 @@ async function getReadingPost(request, response) {
     });
 }
 
-async function getPosts(request, response) {
+async function getPosts(request, response, next) {
   Feed.find({}, { new: true })
-    .select(["postedBy", "postTitle", "createdAt", "comments", "likedBy"])
+    .select(["postedBy", "postTitle", "createdAt", "comments", "likedBy", "tags"])
     .populate("postedBy", ["fullName", "email", "profilePhoto"])
     .exec((error, posts) => {
       if (error) {
@@ -73,7 +75,24 @@ async function getPosts(request, response) {
     });
 }
 
-async function editPost(request, response) {
+async function getFilteredPosts(request, response, next) {
+  const { topic } = request.params;
+  Feed.find({tags: topic}, { new: true })
+    .select(["postedBy", "postTitle", "createdAt", "comments", "likedBy", "tags"])
+    .populate("postedBy", ["fullName", "email", "profilePhoto"])
+    .exec((error, posts) => {
+      if (error) {
+        response.status(401).send(error);
+      } else {
+        // console.log("filtered posts",posts);
+        response.status(200).json({
+          filteredposts: posts,
+        });
+      }
+    });
+}
+
+async function editPost(request, response, next) {
   const { title, content } = request.body;
   const updatedInfo = {
     postTitle: title,
@@ -93,7 +112,7 @@ async function editPost(request, response) {
     });
 }
 
-async function createPostComment(request, response) {
+async function createPostComment(request, response, next) {
   const { comment, userId } = request.body;
   const { id } = request.params;
 
@@ -118,7 +137,7 @@ async function createPostComment(request, response) {
   }
 }
 
-async function getUserPosts(request, response) {
+async function getUserPosts(request, response, next) {
   const { id } = request.params;
   if (id.match(/^[0-9a-fA-F]{24}$/)) {
     const result = await User.findById({ _id: id }).populate("Feed");
@@ -135,7 +154,7 @@ async function getUserPosts(request, response) {
   }
 }
 
-async function deletePost(request, response) {
+async function deletePost(request, response, next) {
   const { id } = request.params;
   Feed.findByIdAndRemove(id)
     .then((res) => {
@@ -150,7 +169,7 @@ async function deletePost(request, response) {
     });
 }
 
-async function addToLikedBy(request, response) {
+async function addToLikedBy(request, response, next) {
   const { id } = request.params;
   const { userId } = request.body;
   const newItem = {
@@ -175,7 +194,7 @@ async function addToLikedBy(request, response) {
     });
 }
 
-async function removeFromLikedBy(request, response) {
+async function removeFromLikedBy(request, response, next) {
   const { id } = request.params;
   const { userId } = request.body;
 
@@ -205,6 +224,7 @@ module.exports = {
   createPost,
   getPost,
   getPosts,
+  getFilteredPosts,
   editPost,
   createPostComment,
   getUserPosts,
