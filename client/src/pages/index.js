@@ -1,11 +1,11 @@
-import  Home  from "./Home/home";
-import  SignIn  from "./SignIn/signIn";
-import  SignUp  from "./SignUp/signUp";
-import  InterviewQuestions from "./InterviewQuestions/interviewQuestions";
+import Home from "./Home/home";
+import SignIn from "./SignIn/signIn";
+import SignUp from "./SignUp/signUp";
+import InterviewQuestions from "./InterviewQuestions/interviewQuestions";
 
 import Main from "./Main/main";
 import CodingChallenge from "./CodingChallenge/codingChallenge";
-import JavaScriptPrograms from "./Programs/programs";
+import Programs from "./Programs/programs";
 import ContactUs from "./ContactUs/contactUs";
 import AboutUs from "./AboutUs/aboutUs";
 import ReadingList from "./ReadingList/readingList";
@@ -26,5 +26,39 @@ import ReactJS from "./ReactJS/reactjs";
 import MongoDB from "./MongoDB/mongoDB";
 import NodeJS from "./NodeJS/nodeJS";
 import ReactNative from "./ReactNative/reactNative";
+import Topics from "./Topics/topics";
+import Jobs from "./Jobs/jobs";
+import DataStructure from "./DataStructure/dataStructure";
 
-export { Home, SignIn ,SignUp, InterviewQuestions, Main, CodingChallenge, JavaScriptPrograms, ContactUs, AboutUs, ReadingList, Dashboard, Settings, CreatePost, EditPost, ForgetPassword, ResetPassword, UserResetPassword, FullArticle, Account, QuizStatusBoard, QuizTopic, OnlineQuiz, JavaScript, ReactJS, MongoDB, NodeJS, ReactNative };
+export {
+  Home,
+  SignIn,
+  SignUp,
+  InterviewQuestions,
+  Main,
+  CodingChallenge,
+  Programs,
+  ContactUs,
+  AboutUs,
+  ReadingList,
+  Dashboard,
+  Settings,
+  CreatePost,
+  EditPost,
+  ForgetPassword,
+  ResetPassword,
+  UserResetPassword,
+  FullArticle,
+  Account,
+  QuizStatusBoard,
+  QuizTopic,
+  OnlineQuiz,
+  JavaScript,
+  ReactJS,
+  MongoDB,
+  NodeJS,
+  ReactNative,
+  Topics,
+  Jobs,
+  DataStructure
+};

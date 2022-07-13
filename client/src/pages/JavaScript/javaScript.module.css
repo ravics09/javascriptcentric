@@ -1,19 +1,51 @@
 .container {
-  padding-top: 100px;
+  padding-top: 65px;
 }
-.header {
+.body {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  height: 300px;
+  margin-top: 10px;
+  margin-bottom: 10px;
   color: white !important;
 }
-.footer {
+.breadCrumb {
+  padding-top: 10px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  background-color: #212529 !important;
+}
+.renderCard {
+  display: flex;
+  flex-direction: row;
+  padding: 10px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  background-color: #212529;
+  cursor: pointer;
+}
+.cardImage {
+  padding: 10px;
+  height: 200px;
+  width: 40%;
+}
+.cardBody {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  height: 300px;
-  color: white !important;
+  justify-content: space-evenly;
+  padding: 10px;
+  width: 60%;
+}
+@media only screen and (max-width: 600px) {
+  .renderCard {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  .cardImage {
+    width: 100%;
+  }
+  .cardBody {
+    width: 100%;
+  }
 }

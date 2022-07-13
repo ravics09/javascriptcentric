@@ -14,29 +14,25 @@ import {
   ReadingList,
   ForgetPassword,
   JavaScript,
-  InterviewQuestions,
-  Main,
-  CodingChallenge,
-  JavaScriptPrograms,
-  ContactUs,
-  AboutUs,
-  Settings,
-  ResetPassword,
-  UserResetPassword,
-  QuizStatusBoard,
-  QuizTopic,
-  OnlineQuiz,
-  ReactJS,
-  MongoDB,
   NodeJS,
-  ReactNative,
+  Topics,
+  Jobs,
+  Programs,
+  DataStructure,
 } from "../pages/index";
+
+import { AdminSignIn, AdminDashboard } from "../admin/index";
 
 const AppRoutes = () => {
   const { isLoggedIn } = useSelector((state) => state.AuthReducer);
+  const Role = JSON.parse(localStorage.getItem("Admin"));
 
   const IsAuth = ({ children }) => {
     return isLoggedIn === true ? children : <Navigate to="/signin" replace />;
+  };
+
+  const IsAdmin = ({ children }) => {
+    return Role && Role.role === "admin" ? children : <Navigate to="/adminsignin" replace />;
   };
 
   return (
@@ -116,7 +112,7 @@ const AppRoutes = () => {
               <JavaScript />
             </IsAuth>
           }
-          path="/javascript"
+          path="/topics/javascript"
         />
         <Route
           exact
@@ -125,7 +121,53 @@ const AppRoutes = () => {
               <NodeJS />
             </IsAuth>
           }
-          path="/nodejs"
+          path="/topics/nodejs"
+        />
+        <Route
+          exact
+          element={
+            <IsAuth>
+              <Topics />
+            </IsAuth>
+          }
+          path="/topics"
+        />
+        <Route
+          exact
+          element={
+            <IsAuth>
+              <Jobs />
+            </IsAuth>
+          }
+          path="/jobs"
+        />
+        <Route
+          exact
+          element={
+            <IsAuth>
+              <Programs />
+            </IsAuth>
+          }
+          path="/programs"
+        />
+        <Route
+          exact
+          element={
+            <IsAuth>
+              <DataStructure />
+            </IsAuth>
+          }
+          path="/datastructure"
+        />
+        <Route exact element={<AdminSignIn />} path="/adminsignin" />
+        <Route
+          exact
+          element={
+            <IsAdmin>
+              <AdminDashboard />
+            </IsAdmin>
+          }
+          path="/admindashboard"
         />
         {/* <Route exact element={<Main/>} path="/main" />
       <Route exact element={<InterviewQuestions/>} path="/interviewquestions" />

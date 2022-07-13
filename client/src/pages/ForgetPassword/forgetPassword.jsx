@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import * as yup from "yup";
 import swal from "sweetalert";
 import { Formik } from "formik";
@@ -6,7 +6,6 @@ import {
   Button,
   Form,
   Container,
-  Row,
   Col,
   InputGroup,
   Image,
@@ -14,7 +13,7 @@ import {
 import { AiOutlineMail } from "react-icons/ai";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useDispatch } from "react-redux";
-import { NavLink, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import RN_IMG from "../../assets/images/forogtimg.png";
 import ForgetPasswordStyle from "./forgetPassword.module.css";
@@ -35,6 +34,10 @@ const initialValues = {
 const ForgetPassword = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [dimensions, setDimensions] = useState({
+    height: window.innerHeight,
+    width: window.innerWidth,
+  });
 
   const handleForgetPassword = (formValues) => {
     const payload = {
@@ -70,129 +73,112 @@ const ForgetPassword = () => {
   };
 
   return (
-    <Container className={ForgetPasswordStyle.container}>
-      <Row className={ForgetPasswordStyle.formContainer}>
-        <Container>
-        <Row style={{ textAlign: "center", paddingBottom: 50 }}>
+    <Container
+      className={ForgetPasswordStyle.container}
+      style={{ minHeight: dimensions.height }}
+    >
+      <div style={{ textAlign: "center" }}>
+        <>
           <h3 className={ForgetPasswordStyle.headerTitle}>Password Reset</h3>
           <p>Forgot your password? Reset it here.</p>
-        </Row>
-        <Row>
-          <Col>
-            <Row className="mb-3">
-              <Image
-                src={RN_IMG}
-                style={{
-                  borderRadius: "30px",
-                  width: "100%",
-                  height: "100%",
-                }}
-              />
-            </Row>
-          </Col>
-          <Col>
-            <Formik
-              validationSchema={validationSchema}
-              initialValues={initialValues}
-              onSubmit={(values, { setSubmitting, resetForm }) => {
-                setSubmitting(true);
-                handleForgetPassword(values);
-                setTimeout(() => {
-                  resetForm();
-                  setSubmitting(false);
-                }, 4000);
-              }}
+        </>
+      </div>
+      <div className={ForgetPasswordStyle.formContainer}>
+        <Image src={RN_IMG} className={ForgetPasswordStyle.sideImage} />
+        <Formik
+          validationSchema={validationSchema}
+          initialValues={initialValues}
+          onSubmit={(values, { setSubmitting, resetForm }) => {
+            setSubmitting(true);
+            handleForgetPassword(values);
+            setTimeout(() => {
+              resetForm();
+              setSubmitting(false);
+            }, 4000);
+          }}
+        >
+          {({
+            handleSubmit,
+            handleChange,
+            handleBlur,
+            isSubmitting,
+            values,
+            touched,
+            errors,
+          }) => (
+            <Form
+              onSubmit={handleSubmit}
+              className={ForgetPasswordStyle.forgetPasswordForm}
             >
-              {({
-                handleSubmit,
-                handleChange,
-                handleBlur,
-                isSubmitting,
-                values,
-                touched,
-                isValid,
-                errors,
-              }) => (
-                <Form
-                  onSubmit={handleSubmit}
-                  className={ForgetPasswordStyle.forgetPasswordForm}
+              <Form.Group controlId="validationFormPassword">
+                <Form.Label>Enter email address</Form.Label>
+                <InputGroup>
+                  <InputGroup.Text style={{ backgroundColor: "white" }}>
+                    <AiOutlineMail />
+                  </InputGroup.Text>
+                  <Form.Control
+                    type="email"
+                    placeholder="Email"
+                    name="email"
+                    className={ForgetPasswordStyle.formControl}
+                    value={values.email}
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    isInvalid={!!errors.email}
+                  />
+                  {touched.email && errors.email ? (
+                    <Form.Control.Feedback type="invalid">
+                      {errors.email}
+                    </Form.Control.Feedback>
+                  ) : null}
+                </InputGroup>
+              </Form.Group>
+              <div className={ForgetPasswordStyle.buttonLayout}>
+                <Button
+                  block
+                  className={ForgetPasswordStyle.requestLinkBtn}
+                  type="submit"
+                  disabled={isSubmitting}
                 >
-                  <Row className="mb-3">
-                    <Form.Group controlId="validationFormPassword">
-                      <Form.Label>Enter email address</Form.Label>
-                      <InputGroup>
-                        <InputGroup.Text style={{ backgroundColor: "white" }}>
-                          <AiOutlineMail />
-                        </InputGroup.Text>
-                        <Form.Control
-                          type="email"
-                          placeholder="Email"
-                          name="email"
-                          className={ForgetPasswordStyle.formControl}
-                          value={values.email}
-                          onBlur={handleBlur}
-                          onChange={handleChange}
-                          isInvalid={!!errors.email}
-                        />
-                        {touched.email && errors.email ? (
-                          <Form.Control.Feedback type="invalid">
-                            {errors.email}
-                          </Form.Control.Feedback>
-                        ) : null}
-                      </InputGroup>
-                    </Form.Group>
-                  </Row>
-                  <Row className="mb-2" style={{ padding: 10 }}>
-                    <Button
-                      block
-                      className={ForgetPasswordStyle.requestLinkBtn}
-                      type="submit"
-                      disabled={isSubmitting}
-                    >
-                      Request reset link
-                    </Button>
-                  </Row>
-                  <Row className="mb-2">
-                    <span
-                      style={{
-                        color: "black",
-                        paddingTop: 10,
-                      }}
-                    >
-                      Want to sign in ?
-                      <Button
-                        as={NavLink}
-                        to="/signin"
-                        className={ForgetPasswordStyle.customBtn}
-                      >
-                        Sign In
-                      </Button>
-                    </span>
-                  </Row>
-                  <Row className="mb-2">
-                    <span
-                      style={{
-                        color: "black",
-                        paddingTop: 10,
-                      }}
-                    >
-                      Don't have an account ?
-                      <Button
-                        as={NavLink}
-                        to="/signup"
-                        className={ForgetPasswordStyle.customBtn}
-                      >
-                        Sign Up
-                      </Button>
-                    </span>
-                  </Row>
-                </Form>
-              )}
-            </Formik>
-          </Col>
-        </Row>
-        </Container>
-      </Row>
+                  Request reset link
+                </Button>
+                <span
+                  style={{
+                    color: "black",
+                    marginTop: "10px",
+                  }}
+                >
+                  Want to sign in ?
+                  <Link
+                    to="/signin"
+                    style={{ color: "black" }}
+                    as={Col}
+                    md="12"
+                  >
+                    Sign In
+                  </Link>
+                </span>
+                <span
+                  style={{
+                    color: "black",
+                    marginTop: "10px",
+                  }}
+                >
+                  Don't have an account ?
+                  <Link
+                    to="/signup"
+                    style={{ color: "black" }}
+                    as={Col}
+                    md="12"
+                  >
+                    Sign Up
+                  </Link>
+                </span>
+              </div>
+            </Form>
+          )}
+        </Formik>
+      </div>
     </Container>
   );
 };

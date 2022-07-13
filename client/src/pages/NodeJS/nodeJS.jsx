@@ -4,7 +4,6 @@ import { Row, Container, Image } from "react-bootstrap";
 import Navbar from "../../components/navbar";
 import Footer from "../../components/footer";
 import NodeJSStyle from "./nodeJS.module.css";
-import ListComponent from "./../../components/listComponent";
 import DEVELOPER_IMG from "../../assets/images/developer.png";
 const nodeData = [
   {
@@ -85,16 +84,33 @@ const NodeJS = () => {
         </Container>
       </div>
       <div style={{ backgroundColor: "#fff", color: "black" }}>
-        <Container
-          className={NodeJSStyle.container}
-          style={{ minHeight: dimensions.height }}
-        >
+        <Container>
           <Row>
-            <ListComponent items={data} />
+            {data.map((item) => (
+              <div key={item.id} className={NodeJSStyle.renderCard}>
+                <Image
+                  src="https://1000logos.net/wp-content/uploads/2020/09/JavaScript-Logo.jpg"
+                  width={500}
+                  height={200}
+                  style={{ padding: "10px" }}
+                />
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    padding: "10px",
+                  }}
+                >
+                  <h4 style={{ color: "black" }}>{item.topic}</h4>
+                  <h5 style={{ color: "gray" }}>{item.description}</h5>
+                  <h5 style={{ color: "gray" }}>2 min Read</h5>
+                </div>
+              </div>
+            ))}
           </Row>
         </Container>
       </div>
-      <Footer/>
+      <Footer />
     </Fragment>
   );
 };

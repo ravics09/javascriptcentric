@@ -1,21 +1,19 @@
 import React, { useState, useEffect, Fragment } from "react";
-import { Row, Container, Image } from "react-bootstrap";
-import Imgix from "react-imgix";
+import { Container, Row, Col, Image, Breadcrumb } from "react-bootstrap";
 
 import Navbar from "../../components/navbar";
 import Footer from "../../components/footer";
 import JavaScriptStyle from "./javaScript.module.css";
-import ListComponent from "./../../components/listComponent";
-import DEVELOPER_IMG from "../../assets/images/developer.png";
 const jsData = [
   {
     id: 1,
-    topic: "Closure",
-    description: "its is combination of lexical scope and function",
+    topic: "How JavaScript Works ?",
+    description:
+      "One of the complicated topic in javascript is closure. Its is combination of lexical scope and function",
   },
   {
     id: 2,
-    topic: "Currying",
+    topic: "Closure in JavaScript",
     description: "its is combination of lexical scope and function",
   },
   {
@@ -30,7 +28,7 @@ const jsData = [
   },
   {
     id: 5,
-    topic: "Closure",
+    topic: "Currying in JavaScript",
     description: "its is combination of lexical scope and function",
   },
   {
@@ -66,32 +64,34 @@ const JavaScript = () => {
   return (
     <Fragment>
       <Navbar showSearchBar={false} />
-      <div
-        style={{
-          backgroundColor: "#181a1f",
-          paddingTop: "150px",
-          paddingBottom: "50px",
-        }}
-      >
-        <Container>
-          <Row>
-            <div className={JavaScriptStyle.header}>
-              <Image src={DEVELOPER_IMG} width={200} height={200} />
-              <h2 style={{ padding: "10px" }}>Ravi Sharma</h2>
-              <h5 style={{ color: "gray" }}>
-                JavaScript Developer who loves to make incredible apps.
-              </h5>
+      <Container className={JavaScriptStyle.container}>
+        <Row>
+          <Col md={9} xl={9} xs={12}>
+            <div className={JavaScriptStyle.body}>
+              <div className={JavaScriptStyle.breadCrumb}>
+                <Breadcrumb as="h5">
+                  <Breadcrumb.Item active>Home</Breadcrumb.Item>
+                  <Breadcrumb.Item active>Topics</Breadcrumb.Item>
+                  <Breadcrumb.Item active>Java Script</Breadcrumb.Item>
+                </Breadcrumb>
+              </div>
+              {data.map((item) => (
+                <div key={item.id} className={JavaScriptStyle.renderCard}>
+                  <Image
+                    src="https://1000logos.net/wp-content/uploads/2020/09/JavaScript-Logo.jpg"
+                    className={JavaScriptStyle.cardImage}
+                  />
+                  <div className={JavaScriptStyle.cardBody}>
+                    <h4 style={{ color: "white" }}>{item.topic}</h4>
+                    <h5 style={{ color: "gray" }}>{item.description}</h5>
+                    <h5 style={{ color: "gray" }}>2 min Read</h5>
+                  </div>
+                </div>
+              ))}
             </div>
-          </Row>
-        </Container>
-      </div>
-      <div style={{ backgroundColor: "#fff", color: "black" }}>
-        <Container>
-          <Row>
-            <ListComponent items={data} />
-          </Row>
-        </Container>
-      </div>
+          </Col>
+        </Row>
+      </Container>
       <Footer />
     </Fragment>
   );

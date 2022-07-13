@@ -1,0 +1,48 @@
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  /* background-color: gray !important; */
+}
+.headerTitle {
+  font-size: 24px;
+  font-weight: bold;
+}
+.formContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.signInForm {
+  display: flex;
+  flex-direction: column;
+  width: 360px;
+  /* background-color: red !important; */
+}
+.formGroup{
+  padding: 10px;
+  width: 100%;
+}
+.formControl {
+  padding: 10px;
+  color: black;
+  width: 100%;
+}
+.buttonLayout {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  width: 100%;
+}
+.signInButton {
+  width: 100%;
+  margin-top: 10px;
+  padding: 10px;
+  background-color: blueviolet !important;
+  border: black solid !important;
+  border-width: 1px !important;
+  border-radius: 10px !important;
+}

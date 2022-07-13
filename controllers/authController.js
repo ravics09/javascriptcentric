@@ -230,6 +230,34 @@ async function validateResetLink(request, response) {
   } else response.status(400).send("Invalid Link Or Link Expired");
 }
 
+async function adminSignIn(request, response, next) {
+  const { email, password } = request.body;
+  console.log("request.body",request.body);
+  if (
+    email !== process.env.ADMIN_EMAIL ||
+    password !== process.env.ADMIN_PASSWORD
+  ) {
+    return response.status(400).json({
+      status: 400,
+      message: "Invalid Admin Credentials",
+    });
+  }
+
+  const customResponse = {
+    role: "admin",
+    email: email,
+  };
+
+  const token = jwt.sign({ email: email }, process.env.SECRET_KEY, {
+    expiresIn: process.env.EXPIRE_IN,
+  });
+
+  response.status(200).json({
+    accessToken: token,
+    admin: customResponse,
+  });
+}
+
 module.exports = {
   signInUser,
   googleSignInUser,
@@ -237,4 +265,5 @@ module.exports = {
   forgetPassword,
   resetPassword,
   validateResetLink,
+  adminSignIn,
 };

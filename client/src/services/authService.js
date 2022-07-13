@@ -1,17 +1,17 @@
 import axios from "axios";
 
-let api = axios.create({
-  baseUrl: "http://http://localhost:9090",
-  timeout: 1000,
-  headers: { "X-Custom-Header": "footer" },
-});
+// let api = axios.create({
+//   baseUrl: "http://http://localhost:9090",
+//   timeout: 1000,
+//   headers: { "X-Custom-Header": "footer" },
+// });
 
-api.interceptors.response.use(
-  (res) => res,
-  (err) => {
-    throw err;
-  }
-);
+// api.interceptors.response.use(
+//   (res) => res,
+//   (err) => {
+//     throw err;
+//   }
+// );
 
 // const API_URL = "http://localhost:9090/auth";
 
@@ -110,12 +110,38 @@ const forgotPassword = async (payload) => {
     });
 };
 
+const adminSignIn = async (payload) => {
+  return axios
+  .post("http://localhost:9090/auth/adminsignin", payload)
+  .then((response) => {
+    if (response.status === 200) {
+      localStorage.setItem("Admin", JSON.stringify(response.data.admin));
+      localStorage.setItem(
+        "AccessToken",
+        JSON.stringify(response.data.accessToken)
+      );
+      return {
+        status: "success",
+        message: "You are redirecting to Admin Dashboard page",
+        admin: response.data.admin,
+      };
+    }
+  })
+  .catch((error) => {
+    return {
+      status: "failed",
+      message: error.response.data.message
+    };
+  });
+}
+
 const authService = {
   signUp,
   signIn,
   googleSignIn,
   signOut,
   forgotPassword,
+  adminSignIn
 };
 
 export default authService;

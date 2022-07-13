@@ -94,7 +94,16 @@ const NavBar = (props) => {
             <Nav.Link
               exact
               as={NavLink}
-              to="/javascript"
+              to="/topics"
+              className={NavBarStyle.navLink}
+              activeClassName={NavBarStyle.activeNavLink}
+            >
+              Topics
+            </Nav.Link>
+            <Nav.Link
+              exact
+              as={NavLink}
+              to="/topics/javascript"
               className={NavBarStyle.navLink}
               activeClassName={NavBarStyle.activeNavLink}
             >
@@ -103,11 +112,29 @@ const NavBar = (props) => {
             <Nav.Link
               exact
               as={NavLink}
-              to="/nodejs"
+              to="/programs"
               className={NavBarStyle.navLink}
               activeClassName={NavBarStyle.activeNavLink}
             >
-              NodeJS
+              Programs
+            </Nav.Link>
+            <Nav.Link
+              exact
+              as={NavLink}
+              to="/datastructure"
+              className={NavBarStyle.navLink}
+              activeClassName={NavBarStyle.activeNavLink}
+            >
+              DS
+            </Nav.Link>
+            <Nav.Link
+              exact
+              as={NavLink}
+              to="/jobs"
+              className={NavBarStyle.navLink}
+              activeClassName={NavBarStyle.activeNavLink}
+            >
+              Jobs
             </Nav.Link>
           </Nav>
           {props.showSearchBar ? (

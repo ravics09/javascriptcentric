@@ -29,6 +29,10 @@ authRoutes.get(
   signInLimiter,
   validateResetLink
 );
+// ****** Admin Route Start *******
+authRoutes.post("/adminsignin", SignInValidator(SignInSchema), adminSignIn);
+// ****** Admin Route End *******
+
 authRoutes.put("/resetpassword/:id", signInLimiter, resetPassword); // Is it secured or not?
 authRoutes.all("*", (request, response, next) => {
   const err = new Error(`Can't find ${request.originalUrl} on this server!`);
@@ -59,6 +63,10 @@ function validateResetLink(request, response, next) {
 
 function resetPassword(request, response, next) {
   authController.resetPassword(request, response, next);
+}
+
+function adminSignIn(request, response, next) {
+  authController.adminSignIn(request, response, next);
 }
 
 module.exports = authRoutes;

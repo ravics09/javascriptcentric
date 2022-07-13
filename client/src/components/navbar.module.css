@@ -1,8 +1,7 @@
-.container{
+.container {
   /* margin-bottom: 100px; */
 }
 .navBrandLink {
-  /* color: rgb(247, 220, 70) !important; */
   color: white !important;
   text-decoration: none;
   pointer-events: none;
@@ -15,13 +14,13 @@
   text-decoration: none;
   padding-right: 5px;
   padding-left: 5px;
-  padding-top:10px;
+  padding-top: 10px;
 }
 .navLink:hover {
   color: white !important;
 }
-.searchBar{
-  padding-top:10px;
+.searchBar {
+  padding-top: 10px;
   padding-left: 5px;
   background-color: #181a1f !important;
 }
@@ -29,10 +28,10 @@
   color: white !important;
   text-decoration: none;
 }
-.navDropdownLink{
+.navDropdownLink {
   right: 0;
   left: auto;
 }
-.navDropdownLink-toggle::after{
-  display: none !important; 
+.navDropdownLink-toggle::after {
+  display: none !important;
 }
