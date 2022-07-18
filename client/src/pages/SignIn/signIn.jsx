@@ -9,7 +9,6 @@ import {
   Button,
   Form,
   Container,
-  Col,
   InputGroup,
   Image,
 } from "react-bootstrap";
@@ -27,8 +26,8 @@ const validationSchema = yup.object().shape({
     .string()
     .email("*Must be a valid email address")
     .max(100, "*Email must be less than 100 characters")
-    .required("Please provide your email."),
-  password: yup.string().required("Please provide your password."),
+    .required("*Please provide your email."),
+  password: yup.string().required("*Please provide your password."),
 });
 
 const initialValues = {
@@ -131,18 +130,17 @@ const SignIn = () => {
           }}
         >
           {({
-            handleSubmit,
-            handleChange,
-            handleBlur,
-            isSubmitting,
             values,
             touched,
             errors,
+            isSubmitting,
+            handleBlur,
+            handleChange,
+            handleSubmit,
           }) => (
             <Form onSubmit={handleSubmit} className={SignInStyle.signInForm}>
               <Form.Group controlId="validationFormEmail">
-                <Form.Label>Email</Form.Label>
-                <InputGroup>
+                <InputGroup className={SignInStyle.formGroup}>
                   <InputGroup.Text style={{ backgroundColor: "white" }}>
                     <AiOutlineMail />
                   </InputGroup.Text>
@@ -154,18 +152,14 @@ const SignIn = () => {
                     value={values.email}
                     onBlur={handleBlur}
                     onChange={handleChange}
-                    isInvalid={!!errors.email}
                   />
-                  {touched.email && errors.email ? (
-                    <Form.Control.Feedback type="invalid">
-                      {errors.email}
-                    </Form.Control.Feedback>
-                  ) : null}
                 </InputGroup>
+                {touched.email && errors.email ? (
+                  <div className={SignInStyle.formError}>{errors.email}</div>
+                ) : null}
               </Form.Group>
-              <Form.Group as={Col} md="12" controlId="validationFormPassword">
-                <Form.Label>Password</Form.Label>
-                <InputGroup>
+              <Form.Group controlId="validationFormPassword">
+                <InputGroup className={SignInStyle.formGroup}>
                   <InputGroup.Text style={{ backgroundColor: "white" }}>
                     <BsLock />
                   </InputGroup.Text>
@@ -177,25 +171,17 @@ const SignIn = () => {
                     value={values.password}
                     onBlur={handleBlur}
                     onChange={handleChange}
-                    isInvalid={!!errors.password}
                   />
                   <InputGroup.Text onClick={() => setShowPass(!showPass)}>
                     {showPass ? <BsFillEyeSlashFill /> : <BsFillEyeFill />}
                   </InputGroup.Text>
-                  {touched.password && errors.password ? (
-                    <Form.Control.Feedback type="invalid">
-                      {errors.password}
-                    </Form.Control.Feedback>
-                  ) : null}
                 </InputGroup>
+                {touched.password && errors.password ? (
+                  <div className={SignInStyle.formError}>{errors.password}</div>
+                ) : null}
               </Form.Group>
-              <div className={SignInStyle.buttonLayout}>
-                <Link
-                  to="/forgetpassword"
-                  style={{ color: "black" }}
-                  as={Col}
-                  md="12"
-                >
+              <div className={SignInStyle.buttonGroup}>
+                <Link to="/forgetpassword" style={{ color: "black" }}>
                   Forgot/Change Password ?
                 </Link>
                 <Button

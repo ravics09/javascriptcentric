@@ -1,11 +1,9 @@
 import React, { useState, useEffect, Fragment } from "react";
-import { Button, Form, Container, Row, Col, InputGroup } from "react-bootstrap";
+import { Button, Container } from "react-bootstrap";
 import * as yup from "yup";
 import swal from "sweetalert";
-import { Formik } from "formik";
-import { Link, useNavigate } from "react-router-dom";
-import { BsFillEyeFill, BsFillEyeSlashFill, BsLock } from "react-icons/bs";
-import { AiOutlineMail } from "react-icons/ai";
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import { useNavigate } from "react-router-dom";
 
 import AdminSignInStyle from "./adminSignIn.module.css";
 import AuthService from "./../../services/authService";
@@ -93,86 +91,45 @@ const AdminSignIn = () => {
               }, 1000);
             }}
           >
-            {({
-              handleSubmit,
-              handleChange,
-              handleBlur,
-              isSubmitting,
-              values,
-              touched,
-              errors,
-            }) => (
-              <Form
-                onSubmit={handleSubmit}
-                className={AdminSignInStyle.signInForm}
-              >
-                <Form.Group
-                  controlId="validationFormEmail"
-                  className={AdminSignInStyle.formGroup}
+            <Form className={AdminSignInStyle.signInForm}>
+              <div className={AdminSignInStyle.formGroup}>
+                <Field
+                  type="text"
+                  name="email"
+                  placeholder="Email"
+                  className={AdminSignInStyle.formControl}
+                />
+                <ErrorMessage
+                  name="email"
+                  component="div"
+                  className={AdminSignInStyle.errors}
+                />
+              </div>
+
+              <div className={AdminSignInStyle.formGroup}>
+                <Field
+                  type={showPass ? "text" : "password"}
+                  name="password"
+                  placeholder="Password"
+                  className={AdminSignInStyle.formControl}
+                />
+                <ErrorMessage
+                  name="password"
+                  component="div"
+                  className={AdminSignInStyle.errors}
+                />
+              </div>
+
+              <div className={AdminSignInStyle.buttonGroup}>
+                <Button
+                  block
+                  className={AdminSignInStyle.signInButton}
+                  type="submit"
                 >
-                  <Form.Label>Email</Form.Label>
-                  <InputGroup>
-                    <InputGroup.Text style={{ backgroundColor: "white" }}>
-                      <AiOutlineMail />
-                    </InputGroup.Text>
-                    <Form.Control
-                      type="email"
-                      placeholder="Email"
-                      name="email"
-                      className={AdminSignInStyle.formControl}
-                      value={values.email}
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                      isInvalid={!!errors.email}
-                    />
-                    {touched.email && errors.email ? (
-                      <Form.Control.Feedback type="invalid">
-                        {errors.email}
-                      </Form.Control.Feedback>
-                    ) : null}
-                  </InputGroup>
-                </Form.Group>
-                <Form.Group
-                  controlId="validationFormPassword"
-                  className={AdminSignInStyle.formGroup}
-                >
-                  <Form.Label>Password</Form.Label>
-                  <InputGroup>
-                    <InputGroup.Text style={{ backgroundColor: "white" }}>
-                      <BsLock />
-                    </InputGroup.Text>
-                    <Form.Control
-                      type={showPass ? "text" : "password"}
-                      placeholder="Password"
-                      name="password"
-                      className={AdminSignInStyle.formControl}
-                      value={values.password}
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                      isInvalid={!!errors.password}
-                    />
-                    <InputGroup.Text onClick={() => setShowPass(!showPass)}>
-                      {showPass ? <BsFillEyeSlashFill /> : <BsFillEyeFill />}
-                    </InputGroup.Text>
-                    {touched.password && errors.password ? (
-                      <Form.Control.Feedback type="invalid">
-                        {errors.password}
-                      </Form.Control.Feedback>
-                    ) : null}
-                  </InputGroup>
-                </Form.Group>
-                <div className={AdminSignInStyle.buttonLayout}>
-                  <Button
-                    block
-                    className={AdminSignInStyle.signInButton}
-                    type="submit"
-                    disabled={isSubmitting}
-                  >
-                    Sign In
-                  </Button>
-                </div>
-              </Form>
-            )}
+                  Sign In
+                </Button>
+              </div>
+            </Form>
           </Formik>
         </div>
       </Container>

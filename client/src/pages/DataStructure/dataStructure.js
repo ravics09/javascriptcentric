@@ -1,48 +1,20 @@
 import React, { useState, useEffect, Fragment } from "react";
 import { Container, Row, Col } from "react-bootstrap";
+import Parser from "html-react-parser";
 
 import Navbar from "../../components/navbar";
 import Footer from "../../components/footer";
 import DataStructureStyle from "./dataStructure.module.css";
-
-const DSTopic = [
-  {
-    id: 1,
-    name: "Array",
-    data: [],
-  },
-  {
-    id: 2,
-    name: "Stack",
-    data: [],
-  },
-  {
-    id: 3,
-    name: "Heap",
-    data: [],
-  },
-  {
-    id: 4,
-    name: "Queue",
-    data: [],
-  },
-  {
-    id: 5,
-    name: "Binary Tree",
-    data: [],
-  },
-];
+import DataStructureArray from "../../helpers/constant/dataStructure";
 
 const DataStructure = () => {
-  const [topic, setTopic] = useState();
-  const [data, setData] = useState();
+  const [topic, setTopic] = useState("Array");
   const [dimensions, setDimensions] = useState({
     height: window.innerHeight,
     width: window.innerWidth,
   });
 
   useEffect(() => {
-    setTopic("Array");
   }, []);
 
   const onSelectDSTopic = (e) => {
@@ -63,7 +35,7 @@ const DataStructure = () => {
                 <span>JS Data Structure</span>
               </div>
               <div className={DataStructureStyle.leftPanelBody}>
-                {DSTopic.map((item) => (
+                {DataStructureArray && DataStructureArray.map((item) => (
                   <Fragment key={item.id}>
                     <p
                       style={{ cursor: "poniter" }}
@@ -71,7 +43,7 @@ const DataStructure = () => {
                         onSelectDSTopic(e);
                       }}
                     >
-                      {item.name}
+                      {item.topicName}
                     </p>
                   </Fragment>
                 ))}
@@ -80,12 +52,19 @@ const DataStructure = () => {
           </Col>
           <Col md={10} xl={10}>
             <div className={DataStructureStyle.rightPanel}>
-              <div className={DataStructureStyle.title}>
-                <span>{topic} Data Structure</span>
-              </div>
-              <div className={DataStructureStyle.rightPanelBody}>
-                <h3>{topic}:</h3>
-              </div>
+              {DataStructureArray &&
+                DataStructureArray.filter((item) => {
+                  return item.topicName.toLowerCase() === topic.toLowerCase();
+                }).map((item) => (
+                  <>
+                    <div className={DataStructureStyle.title}>
+                      <span>{topic} Data Structure</span>
+                    </div>
+                    <div className={DataStructureStyle.rightPanelBody}>
+                      <article>{Parser(`${item.description}`)}</article>
+                    </div>
+                  </>
+                ))}
             </div>
           </Col>
         </Row>

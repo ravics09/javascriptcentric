@@ -3,19 +3,12 @@ import { Link, useNavigate } from "react-router-dom";
 import * as yup from "yup";
 import swal from "sweetalert";
 import { Formik } from "formik";
-import {
-  Button,
-  Form,
-  Container,
-  Col,
-  InputGroup,
-  Image,
-} from "react-bootstrap";
+import { Button, Form, Container, InputGroup, Image } from "react-bootstrap";
 import { BsFillEyeFill, BsFillEyeSlashFill, BsLock } from "react-icons/bs";
 import { AiOutlineMail, AiOutlineUser } from "react-icons/ai";
 
 import "bootstrap/dist/css/bootstrap.min.css";
-import signUpStyle from "./signUp.module.css";
+import SignUpStyle from "./signUp.module.css";
 import AuthService from "../../services/authService";
 import RN_IMG from "../../assets/images/logoi.png";
 
@@ -30,8 +23,8 @@ const validationSchema = yup.object().shape({
     .email("*Must be a valid email address")
     .max(100, "*Email must be less than 100 characters")
     .required("*Email is required"),
-  password: yup.string().required("Password is mendatory"),
-  confirmPassword: yup.string().required("Confirm Password is mendatory"),
+  password: yup.string().required("*Password is mendatory"),
+  confirmPassword: yup.string().required("*Confirm Password is mendatory"),
 });
 
 const initialValues = {
@@ -97,17 +90,17 @@ const SignUp = () => {
 
   return (
     <Container
-      className={signUpStyle.container}
+      className={SignUpStyle.container}
       style={{ minHeight: dimensions.height }}
     >
       <div style={{ textAlign: "center" }}>
         <>
-          <h3 className={signUpStyle.headerTitle}>Sign Up Here</h3>
+          <h3 className={SignUpStyle.headerTitle}>Sign Up Here</h3>
           <p>We are not sharing user details to anyone.</p>
         </>
       </div>
-      <div className={signUpStyle.formContainer}>
-        <Image src={RN_IMG} className={signUpStyle.sideImage} />
+      <div className={SignUpStyle.formContainer}>
+        <Image src={RN_IMG} className={SignUpStyle.sideImage} />
 
         <Formik
           validationSchema={validationSchema}
@@ -121,19 +114,19 @@ const SignUp = () => {
             }, 1000);
           }}
         >
+          {/* Callback function containing Formik state and helpers that handle common form actions */}
           {({
-            handleSubmit,
-            handleChange,
-            handleBlur,
-            isSubmitting,
             values,
             touched,
             errors,
+            isSubmitting,
+            handleBlur,
+            handleChange,
+            handleSubmit,
           }) => (
-            <Form onSubmit={handleSubmit} className={signUpStyle.signUpForm}>
+            <Form onSubmit={handleSubmit} className={SignUpStyle.signUpForm}>
               <Form.Group controlId="validationFormFullName">
-                <Form.Label>Full Name</Form.Label>
-                <InputGroup>
+                <InputGroup className={SignUpStyle.formGroup}>
                   <InputGroup.Text style={{ backgroundColor: "white" }}>
                     <AiOutlineUser />
                   </InputGroup.Text>
@@ -141,23 +134,21 @@ const SignUp = () => {
                     type="text"
                     placeholder="Full Name"
                     name="fullName"
-                    className={signUpStyle.formControl}
+                    className={SignUpStyle.formControl}
                     value={values.fullName}
                     onBlur={handleBlur}
                     onChange={handleChange}
-                    isInvalid={!!errors.fullName}
                   />
-                  {touched.fullName && errors.fullName ? (
-                    <Form.Control.Feedback type="invalid">
-                      {errors.fullName}
-                    </Form.Control.Feedback>
-                  ) : null}
                 </InputGroup>
+                {touched.fullName && errors.fullName ? (
+                  <div className={SignUpStyle.formError}>
+                    <p> {errors.fullName}</p>
+                  </div>
+                ) : null}
               </Form.Group>
 
-              <Form.Group as={Col} md="12" controlId="validationFormEmail">
-                <Form.Label>Email</Form.Label>
-                <InputGroup>
+              <Form.Group controlId="validationFormEmail">
+                <InputGroup className={SignUpStyle.formGroup}>
                   <InputGroup.Text style={{ backgroundColor: "white" }}>
                     <AiOutlineMail />
                   </InputGroup.Text>
@@ -165,22 +156,18 @@ const SignUp = () => {
                     type="email"
                     placeholder="Email"
                     name="email"
-                    className={signUpStyle.formControl}
+                    className={SignUpStyle.formControl}
                     value={values.email}
                     onBlur={handleBlur}
                     onChange={handleChange}
-                    isInvalid={!!errors.email}
                   />
-                  {touched.email && errors.email ? (
-                    <Form.Control.Feedback type="invalid">
-                      {errors.email}
-                    </Form.Control.Feedback>
-                  ) : null}
                 </InputGroup>
+                {touched.email && errors.email ? (
+                  <div className={SignUpStyle.formError}>{errors.email}</div>
+                ) : null}
               </Form.Group>
-              <Form.Group as={Col} md="12" controlId="validationFormPassword">
-                <Form.Label>Password</Form.Label>
-                <InputGroup>
+              <Form.Group controlId="validationFormPassword">
+                <InputGroup className={SignUpStyle.formGroup}>
                   <InputGroup.Text style={{ backgroundColor: "white" }}>
                     <BsLock />
                   </InputGroup.Text>
@@ -188,29 +175,21 @@ const SignUp = () => {
                     type={showPass ? "text" : "password"}
                     placeholder="Password"
                     name="password"
-                    className={signUpStyle.formControl}
+                    className={SignUpStyle.formControl}
                     value={values.password}
                     onBlur={handleBlur}
                     onChange={handleChange}
-                    isInvalid={!!errors.password}
                   />
                   <InputGroup.Text onClick={() => setShowPass(!showPass)}>
                     {showPass ? <BsFillEyeSlashFill /> : <BsFillEyeFill />}
                   </InputGroup.Text>
-                  {touched.password && errors.password ? (
-                    <Form.Control.Feedback type="invalid">
-                      {errors.password}
-                    </Form.Control.Feedback>
-                  ) : null}
                 </InputGroup>
+                {touched.password && errors.password ? (
+                  <div className={SignUpStyle.formError}>{errors.password}</div>
+                ) : null}
               </Form.Group>
-              <Form.Group
-                as={Col}
-                md="12"
-                controlId="validationFormConfirmPassword"
-              >
-                <Form.Label>Confirm Password</Form.Label>
-                <InputGroup>
+              <Form.Group controlId="validationFormConfirmPassword">
+                <InputGroup className={SignUpStyle.formGroup}>
                   <InputGroup.Text style={{ backgroundColor: "white" }}>
                     <BsLock />
                   </InputGroup.Text>
@@ -218,11 +197,10 @@ const SignUp = () => {
                     type={showConfirmPass ? "text" : "password"}
                     placeholder="Confirm Password"
                     name="confirmPassword"
-                    className={signUpStyle.formControl}
+                    className={SignUpStyle.formControl}
                     value={values.confirmPassword}
                     onBlur={handleBlur}
                     onChange={handleChange}
-                    isInvalid={!!errors.confirmPassword}
                   />
                   <InputGroup.Text
                     onClick={() => setShowConfirmPass(!showConfirmPass)}
@@ -233,17 +211,17 @@ const SignUp = () => {
                       <BsFillEyeFill />
                     )}
                   </InputGroup.Text>
-                  {touched.confirmPassword && errors.confirmPassword ? (
-                    <Form.Control.Feedback type="invalid">
-                      {errors.confirmPassword}
-                    </Form.Control.Feedback>
-                  ) : null}
                 </InputGroup>
+                {touched.confirmPassword && errors.confirmPassword ? (
+                  <div className={SignUpStyle.formError}>
+                    {errors.confirmPassword}
+                  </div>
+                ) : null}
               </Form.Group>
-              <div className={signUpStyle.buttonLayout}>
+              <div className={SignUpStyle.buttonGroup}>
                 <Button
                   block
-                  className={signUpStyle.customBtn}
+                  className={SignUpStyle.customBtn}
                   type="submit"
                   disabled={isSubmitting}
                 >

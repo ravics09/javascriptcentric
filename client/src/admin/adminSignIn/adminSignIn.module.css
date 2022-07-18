@@ -3,7 +3,6 @@
   align-items: center;
   justify-content: center;
   color: #fff;
-  /* background-color: gray !important; */
 }
 .headerTitle {
   font-size: 24px;
@@ -18,31 +17,34 @@
 .signInForm {
   display: flex;
   flex-direction: column;
+  justify-content: center;
   width: 360px;
-  /* background-color: red !important; */
 }
-.formGroup{
-  padding: 10px;
+.formGroup {
+  margin-top: 10px;
+  margin-bottom: 10px;
   width: 100%;
 }
 .formControl {
-  padding: 10px;
+  border: 2px solid gray;
+  border-radius: 5px;
+  padding: 5px;
   color: black;
   width: 100%;
 }
-.buttonLayout {
+.errors {
+  color: red;
+}
+.buttonGroup {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 10px;
-  width: 100%;
+  flex-direction: column;
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 .signInButton {
-  width: 100%;
   margin-top: 10px;
-  padding: 10px;
+  margin-bottom: 10px;
   background-color: blueviolet !important;
-  border: black solid !important;
-  border-width: 1px !important;
+  border: 1px black solid !important;
   border-radius: 10px !important;
 }

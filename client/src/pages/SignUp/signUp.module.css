@@ -3,20 +3,11 @@
   align-items: center;
   flex-direction: column;
   justify-content: center;
-  padding-top: 10px;
-  padding-bottom: 10px;
   color: #fff;
 }
 .headerTitle {
   font-size: 24px;
   font-weight: bold;
-}
-.sideImage {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 500px;
-  height: 500px;
 }
 .formContainer {
   display: flex;
@@ -25,10 +16,16 @@
   justify-content: space-evenly;
   width: 100%;
   height: 600px;
-  border: black solid !important;
-  border-width: 2px !important;
+  border: 1px black solid !important;
   border-radius: 10px !important;
   background-color: white !important;
+}
+.sideImage {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 500px;
+  height: 500px;
 }
 .signUpForm {
   display: flex;
@@ -36,11 +33,17 @@
   justify-content: center;
   width: 360px;
 }
+.formGroup {
+  border: 1px solid lightgray !important;
+  border-radius: 5px;
+  margin-top:30px;
+  width: 100%;
+}
 .formControl {
   color: black;
   width: 100%;
 }
-.buttonLayout{
+.buttonGroup {
   display: flex;
   flex-direction: column;
   margin-top: 20px;
@@ -51,6 +54,10 @@
   border: white !important;
   border-width: 1px !important;
   border-radius: 10px !important;
+}
+.formError {
+  color: #ff6565;
+  position: absolute !important;
 }
 @media only screen and (max-width: 600px) {
   .formContainer {

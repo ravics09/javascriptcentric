@@ -1,46 +1,49 @@
 .container {
-  padding-top: 10px;
-  background-color: #181a1f !important;
-  color: white !important;
+  padding-top: 65px;
 }
-.topRow {
-  padding-top: 10px;
-  padding-bottom: 10px;
-}
-.topicRow {
-  padding-top: 10px;
-  padding-bottom: 10px;
-}
-.topicCard {
-  width: 100%;
-  height: 100px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgb(131, 58, 180);
-  background: linear-gradient(
-    90deg,
-    rgba(131, 58, 180, 1) 0%,
-    rgba(253, 29, 29, 1) 50%,
-    rgba(252, 176, 69, 1) 100%
-  );
-  transition: transform 0.1s;
-}
-.topicCard:hover {
-  transform: scale(1.5);
-}
-.header {
+.body {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  height: 300px;
+  margin-top: 10px;
+  margin-bottom: 10px;
   color: white !important;
+}
+.breadCrumb {
+  padding-top: 10px;
+  background-color: #212529 !important;
 }
 .renderCard {
   display: flex;
   flex-direction: row;
-  color: black !important;
-  background-color: white;
-  border-bottom: 1px solid lightgray !important;
+  padding: 10px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  background-color: #212529;
+  cursor: pointer;
+}
+.cardImage {
+  padding: 10px;
+  height: 200px;
+  width: 40%;
+}
+.cardBody {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  padding: 10px;
+  width: 60%;
+}
+@media only screen and (max-width: 600px) {
+  .renderCard {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  .cardImage {
+    width: 100%;
+  }
+  .cardBody {
+    width: 100%;
+  }
 }

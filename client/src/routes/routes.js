@@ -19,6 +19,7 @@ import {
   Jobs,
   Programs,
   DataStructure,
+  ReadTopic,
 } from "../pages/index";
 
 import { AdminSignIn, AdminDashboard } from "../admin/index";
@@ -32,7 +33,11 @@ const AppRoutes = () => {
   };
 
   const IsAdmin = ({ children }) => {
-    return Role && Role.role === "admin" ? children : <Navigate to="/adminsignin" replace />;
+    return Role && Role.role === "admin" ? (
+      children
+    ) : (
+      <Navigate to="/adminsignin" replace />
+    );
   };
 
   return (
@@ -158,6 +163,15 @@ const AppRoutes = () => {
             </IsAuth>
           }
           path="/datastructure"
+        />
+        <Route
+          exact
+          element={
+            <IsAuth>
+              <ReadTopic />
+            </IsAuth>
+          }
+          path="/topics/:topic/readtopic/:id"
         />
         <Route exact element={<AdminSignIn />} path="/adminsignin" />
         <Route

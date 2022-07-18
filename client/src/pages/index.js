@@ -29,6 +29,7 @@ import ReactNative from "./ReactNative/reactNative";
 import Topics from "./Topics/topics";
 import Jobs from "./Jobs/jobs";
 import DataStructure from "./DataStructure/dataStructure";
+import ReadTopic from "./ReadTopic/readTopic";
 
 export {
   Home,
@@ -60,5 +61,6 @@ export {
   ReactNative,
   Topics,
   Jobs,
-  DataStructure
+  DataStructure,
+  ReadTopic
 };

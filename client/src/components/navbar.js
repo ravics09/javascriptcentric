@@ -130,12 +130,21 @@ const NavBar = (props) => {
             <Nav.Link
               exact
               as={NavLink}
+              to="/videos"
+              className={NavBarStyle.navLink}
+              activeClassName={NavBarStyle.activeNavLink}
+            >
+              Videos
+            </Nav.Link>
+            {/* <Nav.Link
+              exact
+              as={NavLink}
               to="/jobs"
               className={NavBarStyle.navLink}
               activeClassName={NavBarStyle.activeNavLink}
             >
               Jobs
-            </Nav.Link>
+            </Nav.Link> */}
           </Nav>
           {props.showSearchBar ? (
             <Form className="d-flex">
